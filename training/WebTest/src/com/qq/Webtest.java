@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.tika.Tika;
+import org.apache.tika.exception.TikaException;
 /**
  * Servlet implementation class Webtest
  */
@@ -124,40 +126,40 @@ public class Webtest extends HttpServlet {
 		}			
 	}
 	//*********************閭欢闄勪欢淇℃伅鍐欏叆txt***********************//
-//	public void MailAppendInput(String fileName,String appendInfo)
-//	{
-//		String filename=fileName;
-//		Tika tika = new Tika();
-//		String text = null;
-//		try 
-//		{
-//			text = tika.parseToString(new File(appendInfo));
-//		} 
-//		catch (IOException e) 
-//		{
-//			e.printStackTrace();
-//		} 
-//		catch (TikaException e) 
-//		{
-//			e.printStackTrace();
-//		}
-//		try
-//		{	
-//			File file = new File(filename);
-//		    if(!file.exists()) 
-//		    {
-//			    file.createNewFile();
-//		    }
-//		    FileWriter fw = new FileWriter(file.getAbsoluteFile());
-//		    BufferedWriter bw = new BufferedWriter(fw);
-//		    bw.write(text);
-//		    bw.close();
-//		} 
-//		catch(IOException e) 
-//		{
-//			e.printStackTrace();
-//		}			
-//	}
+	public void MailAppendInput(String fileName,String appendInfo)
+	{
+		String filename=fileName;
+		Tika tika = new Tika();
+		String text = null;
+		try 
+		{
+			text = tika.parseToString(new File(appendInfo));
+		} 
+		catch (IOException e) 
+		{
+			e.printStackTrace();
+		} 
+		catch (TikaException e) 
+		{
+			e.printStackTrace();
+		}
+		try
+		{	
+			File file = new File(filename);
+		    if(!file.exists()) 
+		    {
+			    file.createNewFile();
+		    }
+		    FileWriter fw = new FileWriter(file.getAbsoluteFile());
+		    BufferedWriter bw = new BufferedWriter(fw);
+		    bw.write(text);
+		    bw.close();
+		} 
+		catch(IOException e) 
+		{
+			e.printStackTrace();
+		}			
+	}
 	public void Txt2Abstract(String infileName,String outfilename) 
 	{
 		//摘要生成部分
