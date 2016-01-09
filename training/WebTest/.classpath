@@ -19,6 +19,5 @@
 			<attribute name="owner.project.facets" value="jst.web.jstl"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="D:/Program Files/Java/jdk1.8.0_65/lib/tika-app-1.11.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>

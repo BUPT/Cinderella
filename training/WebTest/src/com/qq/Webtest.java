@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.tika.Tika;
-import org.apache.tika.exception.TikaException;
+//import org.apache.tika.Tika;
+//import org.apache.tika.exception.TikaException;
 /**
  * Servlet implementation class Webtest
  */
@@ -76,7 +76,7 @@ public class Webtest extends HttpServlet {
 			}
 	    }
 		MailTxtInput(Raw_filename,email.getSender(),email.getReciever(),email.getSendTime(),email.getEmailSubject(),email.getEmailBody());		
-//		MailAppendInput(filename,email.getEmailAttach());
+		//MailAppendInput(Raw_filename,email.getEmailAttach());
 		
 		Txt2Abstract(Raw_filename,Abstract_filename);		
 
@@ -126,40 +126,41 @@ public class Webtest extends HttpServlet {
 		}			
 	}
 	//*********************閭欢闄勪欢淇℃伅鍐欏叆txt***********************//
-	public void MailAppendInput(String fileName,String appendInfo)
-	{
-		String filename=fileName;
-		Tika tika = new Tika();
-		String text = null;
-		try 
-		{
-			text = tika.parseToString(new File(appendInfo));
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-		} 
-		catch (TikaException e) 
-		{
-			e.printStackTrace();
-		}
-		try
-		{	
-			File file = new File(filename);
-		    if(!file.exists()) 
-		    {
-			    file.createNewFile();
-		    }
-		    FileWriter fw = new FileWriter(file.getAbsoluteFile());
-		    BufferedWriter bw = new BufferedWriter(fw);
-		    bw.write(text);
-		    bw.close();
-		} 
-		catch(IOException e) 
-		{
-			e.printStackTrace();
-		}			
-	}
+//	public void MailAppendInput(String fileName,String appendInfo)
+//	{
+//		String filename=fileName;
+//		System.out.println(filename);
+//		Tika tika = new Tika();
+//		String text = null;
+//		try 
+//		{
+//			text = tika.parseToString(new File(appendInfo));
+//		} 
+//		catch (IOException e) 
+//		{
+//			e.printStackTrace();
+//		} 
+//		catch (TikaException e) 
+//		{
+//			e.printStackTrace();
+//		}
+//		try
+//		{	
+//			File file = new File(filename);
+//		    if(!file.exists()) 
+//		    {
+//			    file.createNewFile();
+//		    }
+//		    FileWriter fw = new FileWriter(file.getAbsoluteFile());
+//		    BufferedWriter bw = new BufferedWriter(fw);
+//		    bw.write(text);
+//		    bw.close();
+//		} 
+//		catch(IOException e) 
+//		{
+//			e.printStackTrace();
+//		}			
+//	}
 	public void Txt2Abstract(String infileName,String outfilename) 
 	{
 		//摘要生成部分
@@ -173,7 +174,7 @@ public class Webtest extends HttpServlet {
 		String location="beijing";
 		int financeLimit=30000;
 		String tranStock="20%";
-		String projectName="Farmers";
+		String projectName="农夫山泉";
 		String companyName="Beijing Farmer's Company";
 		String founderName="San Zhang";
 		String bizArea="Farming";
@@ -201,7 +202,7 @@ public class Webtest extends HttpServlet {
 	}
 	public void iBotOutput(BotResult bot,HttpServletResponse response)
 	{
-		response.setContentType("text/plain");
+		response.setContentType("text/plain;charset=utf-8");
 		try {
 			PrintWriter out = response.getWriter();
 			System.out.println("---------------输出ing---------------------");
