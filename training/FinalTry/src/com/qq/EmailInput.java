@@ -6,7 +6,7 @@ public class EmailInput {
 	private String sendTime;
 	private String emailSubject;
 	private String emailBody;
-	private String emailAttach;
+	private String[] emailAttach;
 	
 	public EmailInput()
 	{
@@ -15,7 +15,7 @@ public class EmailInput {
 		sendTime="none";
 		emailSubject="none";
 		emailBody="none";
-		emailAttach="none";
+		emailAttach=new String[10];
 	}
 
 	public String getSender() {
@@ -58,11 +58,12 @@ public class EmailInput {
 		this.emailBody = emailBody;
 	}
 
-	public String getEmailAttach() {
+	public String[] getEmailAttach() {
 		return emailAttach;
 	}
 
-	public void setEmailAttach(String temp) {
-		this.emailAttach = temp;
-	}	
+	public void setEmailAttach(String[] emailAttach) {
+		this.emailAttach = emailAttach;
+	}
+	
 }

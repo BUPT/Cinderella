@@ -72,12 +72,15 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 				}
 				else if(temp1[i].equals("attachment"))
 				{
-					email.setEmailAttach(temp1[i+1]);
+					String temp2[] =temp1[i+1].split("\\|");	
+//					System.out.println(temp1[i+1]);
+//					for(i=0;i<temp2.length;i++)
+//						System.out.println(temp2[i]);
+					email.setEmailAttach(temp2);
 				}
 			}
 	    }
-		
-		
+			
 		MailTxtInput(Raw_filename,email);		
 		
 		Txt2Abstract(Raw_filename,Abstract_filename);		
@@ -108,12 +111,15 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 		String timeInfo=email.getSendTime();
 		String subjectInfo=email.getEmailSubject();
 		String bodyInfo=email.getEmailBody();
-		String appendInfo=email.getEmailAttach();
+		String[] appendInfo=email.getEmailAttach();
 		Tika tika = new Tika();
-		String text = null;
+		String text = "";
 		try 
 		{
-			text = tika.parseToString(new File(appendInfo));
+			for(int i=0;i<appendInfo.length;i++)
+			{
+				text = text+"\r\n"+"附件"+(i+1)+"内容:"+tika.parseToString(new File(appendInfo[i]));
+			}		
 		} 
 		catch (IOException e) 
 		{
