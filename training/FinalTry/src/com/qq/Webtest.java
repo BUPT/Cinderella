@@ -16,9 +16,9 @@ import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
 
 /**
- * Servlet implementation class Demo1
+ * Servlet implementation class Webtest
  */
-@WebServlet("/Demo1")
+@WebServlet("/Webtest")
 public class Webtest extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -76,8 +76,9 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 				}
 			}
 	    }
-		MailTxtInput(Raw_filename,email.getSender(),email.getReciever(),email.getSendTime(),email.getEmailSubject(),email.getEmailBody());		
-		MailAppendInput(Raw_filename,email.getEmailAttach());
+		
+		
+		MailTxtInput(Raw_filename,email);		
 		
 		Txt2Abstract(Raw_filename,Abstract_filename);		
 
@@ -100,41 +101,16 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 		doGet(request, response); 
 		
 	}
-	public void MailTxtInput(String fileName,String sendInfo,String recieveInfo,String timeInfo,String subjectInfo,String bodyInfo)
+	public void MailTxtInput(String fileName,EmailInput email)
 	{
-		try
-		{
-			String filename=fileName;	
-			File file = new File(filename);
-		    if(!file.exists()) 
-		    {
-			    file.createNewFile();
-		    }
-		    FileWriter fw = new FileWriter(file.getAbsoluteFile());
-		    BufferedWriter bw = new BufferedWriter(fw);
-		    bw.write(sendInfo);
-		    bw.write(recieveInfo); 
-		    bw.write(timeInfo);
-		    bw.write(subjectInfo);
-		    bw.write(bodyInfo);
-		    bw.close();
-	
-		    System.out.println("Done");  
-		} 
-		catch(IOException e) 
-		{
-			e.printStackTrace();
-		}			
-	}
-	//*********************é‚®ä»¶é™„ä»¶ä¿¡æ¯å†™å…¥txt***********************//
-	public void MailAppendInput(String fileName,String appendInfo)
-	{
-		String filename=fileName;
-		System.out.println(filename);
+		String sendInfo=email.getSender();
+		String recieveInfo=email.getReciever();
+		String timeInfo=email.getSendTime();
+		String subjectInfo=email.getEmailSubject();
+		String bodyInfo=email.getEmailBody();
+		String appendInfo=email.getEmailAttach();
 		Tika tika = new Tika();
 		String text = null;
-		String filePath=appendInfo;  
-       
 		try 
 		{
 			text = tika.parseToString(new File(appendInfo));
@@ -148,7 +124,8 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 			e.printStackTrace();
 		}
 		try
-		{	
+		{
+			String filename=fileName;	
 			File file = new File(filename);
 		    if(!file.exists()) 
 		    {
@@ -156,31 +133,77 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 		    }
 		    FileWriter fw = new FileWriter(file.getAbsoluteFile());
 		    BufferedWriter bw = new BufferedWriter(fw);
-		    bw.write(text);
+		    bw.write("å‘ä»¶äººï¼š"+sendInfo+"\r\n");
+		    bw.write("æ”¶ä»¶äººï¼š"+recieveInfo+"\r\n"); 
+		    bw.write("å‘ä»¶æ—¶é—´ï¼š"+timeInfo+"\r\n");
+		    bw.write("é‚®ä»¶ä¸»é¢˜ï¼š"+subjectInfo+"\r\n");
+		    bw.write("é‚®ä»¶æ­£æ–‡ï¼š"+bodyInfo+"\r\n");
+		    bw.write("é™„ä»¶å†…å®¹ï¼š"+"\r\n"+text);
 		    bw.close();
+		    bw.close();
+	
+		    System.out.println("Done");  
 		} 
 		catch(IOException e) 
 		{
 			e.printStackTrace();
 		}			
 	}
+//	//*********************é‚®ä»¶é™„ä»¶ä¿¡æ¯å†™å…¥txt***********************//
+//	public void MailAppendInput(String fileName,String appendInfo)
+//	{
+//		String filename=fileName;
+//		System.out.println(filename);
+//		Tika tika = new Tika();
+//		String text = null;
+//		//String filePath=appendInfo;  
+//       
+//		try 
+//		{
+//			text = tika.parseToString(new File(appendInfo));
+//		} 
+//		catch (IOException e) 
+//		{
+//			e.printStackTrace();
+//		} 
+//		catch (TikaException e) 
+//		{
+//			e.printStackTrace();
+//		}
+//		try
+//		{	
+//			File file = new File(filename);
+//		    if(!file.exists()) 
+//		    {
+//			    file.createNewFile();
+//		    }
+//		    FileWriter fw = new FileWriter(file.getAbsoluteFile());
+//		    BufferedWriter bw = new BufferedWriter(fw);
+//		    bw.write(text);
+//		    bw.close();
+//		} 
+//		catch(IOException e) 
+//		{
+//			e.printStackTrace();
+//		}			
+//	}
 	public void Txt2Abstract(String infileName,String outfilename) 
 	{
-		//ÕªÒªÉú³É²¿·Ö
-		//´«ÈëµÄ²ÎÊıÊÇËùÓĞĞÅÏ¢µÄtxt±£´æÂ·¾¶£¬ºÍÕªÒªµÄtxt±£´æÂ·¾¶
+		//æ‘˜è¦è·å–æ¨¡å—
+		//è¾“å…¥ä¸ºtxtè¯­æ–™åœ°å€å’Œæ‘˜è¦å­˜å‚¨åœ°å€ï¼Œæ— è¿”å›å€¼
 	}
 	public BotResult Abstract2Meta(String filename)
 	{
-		//¹Ø¼üÖµÌáÈ¡²¿·Ö
-		//´«ÈëµÄ²ÎÊıÊÇÕªÒªµÄtxt±£´æÂ·¾¶£¬·µ»ØÖµÊÇBotResult¶ÔÏó
+		//å…³é”®å±æ€§è·å–æ¨¡å—
+		//è¾“å…¥ä¸ºæ‘˜è¦å­˜æ”¾åœ°å€ï¼Œè¿”å›å€¼ä¸ºBotResultå¯¹è±¡
 		
-		String location="±±¾©";
+		String location="åŒ—äº¬";
 		int financeLimit=30000;
 		String tranStock="20%";
-		String projectName="Å©·òÉ½Èª";
-		String companyName="±±¾©Å©Òµ¿Æ¼¼ÓĞÏŞ¹«Ë¾";
-		String founderName="ÕÅÈı";
-		String bizArea="Å©Òµ";
+		String projectName="å†œå¤«ä¹‹å®¶";
+		String companyName="åŒ—äº¬å¸‚å†œä¸šç§‘æŠ€æœ‰é™å…¬å¸";
+		String founderName="å¼ ä¸‰";
+		String bizArea="å†œä¸š";
 		
 		BotResult bot=new BotResult();
 		bot.setLocation(location);
@@ -196,8 +219,8 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 	}
 	public BotResult Meta2Subness(BotResult bot)
 	{
-		//ÖÃĞÅ³Ì¶ÈÌáÈ¡²¿·Ö
-		//´«ÈëµÄ²ÎÊıºÍ·µ»ØÖµ¶¼ÊÇBotResult¶ÔÏó
+		//ç½®ä¿¡åº¦è·å–æ¨¡å—
+		//è¾“å…¥ä¸ºBotResultå¯¹è±¡ï¼Œè¾“å‡ºä¸ºç½®ä¿¡åº¦subness
 		
 		double subness=0.5;
 		bot.setSubness(subness);
@@ -208,15 +231,15 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 		response.setContentType("text/plain;charset=utf-8");
 		try {
 			PrintWriter out = response.getWriter();
-			System.out.println("---------------Êä³öing---------------------");
-			out.println("Location:"+bot.getLocation());
-			out.println("Project:"+bot.getProjectName());
-			out.println("Company name"+bot.getCompanyName());
-			out.println("Founder:"+bot.getFounderName());
-			out.println("FinanceLimit:"+bot.getFinanceLimit());
-			out.println("TranStock:"+bot.getTranStock());
-			out.println("BizArea:"+bot.getBizArea());
-			out.println("Subness:"+bot.getSubness());
+			System.out.println("---------------è¾“å‡ºing---------------------");
+			out.println("åœ°ç‚¹:"+bot.getLocation());
+			out.println("é¡¹ç›®åç§°:"+bot.getProjectName());
+			out.println("å…¬å¸åç§°:"+bot.getCompanyName());
+			out.println("æˆç«‹è€…:"+bot.getFounderName());
+			out.println("èèµ„é¢åº¦:"+bot.getFinanceLimit());
+			out.println("å‡ºè®©è‚¡æƒ:"+bot.getTranStock());
+			out.println("è¡Œä¸š:"+bot.getBizArea());
+			out.println("ç½®ä¿¡ç¨‹åº¦:"+bot.getSubness());
 			out.println("------------------------------------");
 			out.flush();
 			out.close();

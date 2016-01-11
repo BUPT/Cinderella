@@ -10,11 +10,12 @@ public class EmailInput {
 	
 	public EmailInput()
 	{
-//		sender="noreply@coursera.org";
-//		reciever="346786495@qq.com";
-//		sendTime="2015骞�2鏈�5鏃�鏄熸湡浜� 涓婂崍10:31";
-//		emailSubject="娆㈣繋鏉ュ埌Coursera锛�;
-//		emailAttach="D:\\iBotest\\test.ppt";
+		sender="none";
+		reciever="none";
+		sendTime="none";
+		emailSubject="none";
+		emailBody="none";
+		emailAttach="none";
 	}
 
 	public String getSender() {
