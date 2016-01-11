@@ -19,5 +19,7 @@
 			<attribute name="owner.project.facets" value="jst.web.jstl"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="D:/Program Files/Java/jdk1.8.0_65/lib/javax.servlet.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/Java/jdk1.8.0_65/lib/javax.servlet.jsp.jar"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>
 </classpath>

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
+//import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +18,7 @@ import org.apache.tika.exception.TikaException;
 /**
  * Servlet implementation class Webtest
  */
-@WebServlet("/Webtest")
+//@WebServlet("/Webtest")
 public class Webtest extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
