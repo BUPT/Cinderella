@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.net.URLDecoder;
+import java.io.UnsupportedEncodingException;
 
 public class TEST {
 
@@ -11,10 +14,10 @@ public class TEST {
 		// TODO Auto-generated method stub
 		String httpUrl = "http://localhost:8080/FinalTry/Webtest";
 		String sendInfo="346786495@qq.com";
-		String recieveInfo="bbb@qq.com";
+		String recieveInfo="wnbupt@qq.com";
 		String timeInfo="2015-12-16-10:43";
-		String subjectInfo="HelloWorld!";
-		String bodyInfo="balalalalal";
+		String subjectInfo="测试demo跑起来";
+		String bodyInfo="中文其实也是可以的嘛！！点赞";
 		String[] appendInfo={"D:/ibotest/test.ppt","D:/ibotest/test.doc"};
 		String httpArg = "sender="+sendInfo+"&reciever="+recieveInfo+"&sendtime="+timeInfo+"&subject="+subjectInfo+"&body="+bodyInfo+"&attachment=";
 		int i;
@@ -32,20 +35,21 @@ public class TEST {
 	{
 	    BufferedReader reader = null;
 	    String result = null;
-	    StringBuffer sbf = new StringBuffer();
-		httpUrl = httpUrl + "?" + httpArg;
-	    System.out.println(httpUrl);
+	    StringBuffer sbf = new StringBuffer();	   
 	    try 
 	    {
+	    	
+	    	httpArg=URLEncoder.encode(httpArg,"utf-8");
+	    	httpUrl = httpUrl + "?" + httpArg;
 	        URL url = new URL(httpUrl);
+	        
 	        HttpURLConnection connection = (HttpURLConnection) url
 	                .openConnection();
-	        connection.setRequestMethod("POST");
-	        // ����apikey��HTTP header
+	        //connection.setRequestMethod("POST");
 	        connection.connect();	      
 	        java.io.InputStream is = connection.getInputStream();
 	        //InputStream is = (InputStream) connection.getInputStream();
-	        reader = new BufferedReader(new InputStreamReader(is, "utf-8"));
+	        reader = new BufferedReader(new InputStreamReader(is));
 	        String strRead = null;
 	        while ((strRead = reader.readLine()) != null) {
 	        	//System.out.println(strRead);
