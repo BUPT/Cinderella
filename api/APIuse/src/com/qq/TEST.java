@@ -18,8 +18,8 @@ public class TEST {
 		String timeInfo="2015-12-16-10:43";
 		String subjectInfo="测试demo跑起来";
 		String bodyInfo="中文其实也是可以的嘛！！点赞";
-		String[] appendInfo={"D:/ibotest/test.ppt","D:/ibotest/test.doc"};
-		//String[] appendInfo={" "};//没有附件的时候传入空格
+		//String[] appendInfo={"D:/ibotest/test.ppt","D:/ibotest/test.doc"};
+		String[] appendInfo={"null"};//没有附件的时候传入null
 		String httpArg = "sender="+sendInfo+"&reciever="+recieveInfo+"&sendtime="+timeInfo+"&subject="+subjectInfo+"&body="+bodyInfo+"&attachment=";
 		int i;
 		for(i=0;i<appendInfo.length-1;i++)
@@ -29,6 +29,7 @@ public class TEST {
 		httpArg=httpArg+appendInfo[i];
 		TEST test=new TEST();
 		String jsonResult = test.request(httpUrl, httpArg);
+		System.out.println(httpUrl+httpArg);
 		System.out.println(jsonResult);
 	}
 	

@@ -118,10 +118,20 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 		Tika tika = new Tika();
 		String text = "";
 		try 
-		{
+		{			
 			for(int i=0;i<appendInfo.length;i++)
 			{
-				text = text+"\r\n"+"附件"+(i+1)+"内容:"+tika.parseToString(new File(appendInfo[i]));
+				File file=new File(appendInfo[i]);
+				if(!file.exists())  
+				{
+					text = text+"您指定的附件："+appendInfo[i]+"不存在";
+					System.out.println(text);
+				}
+				else
+				{
+					text = text+"\r\n"+"附件"+(i+1)+"内容:"+tika.parseToString(file);
+				}
+				
 			}		
 		} 
 		catch (IOException e) 
@@ -245,7 +255,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 	        key("项目名称").value(bot.getProjectName()).  
 	        key("公司名称").value(bot.getCompanyName()).  
 	        key("成立者").value(bot.getFounderName()).
-	        key("融资额度").value(bot.getFounderName()).
+	        key("融资额度").value(bot.getFinanceLimit()).
 	        key("出让股权").value(bot.getTranStock()).
 	        key("行业").value(bot.getBizArea()).
 	        key("置信程度").value(bot.getSubness()).endObject(); 
