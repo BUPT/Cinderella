@@ -48,8 +48,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 		
 		String str=request.getQueryString();
 		str=URLDecoder.decode(str, "UTF-8");
-		System.out.println(str);
-		//out.println(str);
+	
 		String temp[] =str.split("&");
 		for(String word : temp)
 	    {
@@ -142,8 +141,6 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 			    file.createNewFile();
 		    }
 		    FileOutputStream fw = new FileOutputStream(file.getAbsoluteFile());
-		    //BufferedWriter bw = new BufferedWriter(fw);
-		    //BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fw, "UTF-8")); 
 		    OutputStreamWriter bw = new OutputStreamWriter(fw, "UTF-8");
 		    bw.write("发件人："+sendInfo+"\r\n");
 		    bw.write("收件人："+recieveInfo+"\r\n"); 
@@ -240,14 +237,10 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 	public void iBotOutput(BotResult bot,HttpServletResponse response)
 	{
 		response.setCharacterEncoding("UTF-8");
-		//response.setContentType("text/plain;charset=utf-8");
-		//response.setContentType("application/json;charset=utf-8");
 		response.setContentType("text/json; charset=UTF-8"); 
 		JSONStringer stringer = new JSONStringer();  
 
 		try {
-			//PrintWriter out = response.getWriter();
-			//stringer.array();
 		    stringer.object().key("地点").value(bot.getLocation()).  
 	        key("项目名称").value(bot.getProjectName()).  
 	        key("公司名称").value(bot.getCompanyName()).  
@@ -256,23 +249,8 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 	        key("出让股权").value(bot.getTranStock()).
 	        key("行业").value(bot.getBizArea()).
 	        key("置信程度").value(bot.getSubness()).endObject(); 
-		    //stringer.endArray();
 			System.out.println("---------------输出ing---------------------");
-//			out.println(":"+bot.getLocation());
-//			out.println("项目名称:"+bot.getProjectName());
-//			out.println("公司名称:"+bot.getCompanyName());
-//			out.println("成立者:"+bot.getFounderName());
-//			out.println("融资额度:"+bot.getFinanceLimit());
-//			out.println("出让股权:"+bot.getTranStock());
-//			out.println("行业:"+bot.getBizArea());
-//			out.println("置信程度:"+bot.getSubness());
-//			out.println("------------------------------------");
-//			out.flush();
 			response.getOutputStream().write(stringer.toString().getBytes("UTF-8"));  			
-			//out.write(stringer.toString());
-			
-	//		out.println(stringer.toString().getBytes("UTF-8"));
-		//	out.close();
 		} 
 		catch (IOException e) {
 			// TODO Auto-generated catch block
