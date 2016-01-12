@@ -47,52 +47,68 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response) t
 		String Abstract_filename="D:\\iBotest\\abstract.txt";
 		
 		String str=request.getQueryString();
-		str=URLDecoder.decode(str, "UTF-8");
-	
-		String temp[] =str.split("&");
-		for(String word : temp)
-	    {
+		System.out.println("str:"+str);
+		if(str==null)
+		{
+			str="you don't have any parameters";
+			response.getOutputStream().write(str.getBytes("UTF-8"));
+		}
+		else
+		{
+			str=URLDecoder.decode(str, "UTF-8");
+			String temp[] =str.split("&");
+			for(String word : temp)
+		    {
+				
+				String temp1[] =word.split("=");	
+				for(int i=0;i<temp1.length;i++)
+				{
+					if(temp1[i].equals("sender"))
+					{
+						email.setSender(temp1[i+1]);
+					}
+					else if(temp1[i].equals("reciever"))
+					{
+						email.setReciever(temp1[i+1]);
+					}
+					else if(temp1[i].equals("sendtime"))
+					{
+						email.setSendTime(temp1[i+1]);
+					}
+					else if(temp1[i].equals("subject"))
+					{
+						email.setEmailSubject(temp1[i+1]);
+					}
+					else if(temp1[i].equals("body"))
+					{
+						email.setEmailBody(temp1[i+1]);
+					}
+					else if(temp1[i].equals("attachment"))
+					{
+						String temp2[] =temp1[i+1].split("\\|");	
+						email.setEmailAttach(temp2);
+					}
+				}
+		    }
+			System.out.println(email.getSender());
+			System.out.println(email.getReciever());
+			System.out.println(email.getEmailBody());
+			System.out.println(email.getEmailSubject());
+			System.out.println(email.getSendTime());
+			System.out.println(email.getEmailAttach()[0].toString());
+				
+			MailTxtInput(Raw_filename,email);		
 			
-			String temp1[] =word.split("=");	
-			for(int i=0;i<temp1.length;i++)
-			{
-				if(temp1[i].equals("sender"))
-				{
-					email.setSender(temp1[i+1]);
-				}
-				else if(temp1[i].equals("reciever"))
-				{
-					email.setReciever(temp1[i+1]);
-				}
-				else if(temp1[i].equals("sendtime"))
-				{
-					email.setSendTime(temp1[i+1]);
-				}
-				else if(temp1[i].equals("subject"))
-				{
-					email.setEmailSubject(temp1[i+1]);
-				}
-				else if(temp1[i].equals("body"))
-				{
-					email.setEmailBody(temp1[i+1]);
-				}
-				else if(temp1[i].equals("attachment"))
-				{
-					String temp2[] =temp1[i+1].split("\\|");	
-					email.setEmailAttach(temp2);
-				}
-			}
-	    }
+			Txt2Abstract(Raw_filename,Abstract_filename);		
+
+			botResult=Abstract2Meta(Abstract_filename);
+
+			botResult=Meta2Subness(botResult);
 			
-		MailTxtInput(Raw_filename,email);		
+			iBotOutput(botResult,response);
+		}
 		
-		Txt2Abstract(Raw_filename,Abstract_filename);		
-
-		botResult=Abstract2Meta(Abstract_filename);
-
-		botResult=Meta2Subness(botResult);
 		
-		iBotOutput(botResult,response);
 		
 	}
 

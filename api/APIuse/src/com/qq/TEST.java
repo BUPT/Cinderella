@@ -29,7 +29,7 @@ public class TEST {
 		httpArg=httpArg+appendInfo[i];
 		TEST test=new TEST();
 		String jsonResult = test.request(httpUrl, httpArg);
-		System.out.println(httpUrl+httpArg);
+		System.out.println(httpUrl+"?"+httpArg);
 		System.out.println(jsonResult);
 	}
 	
