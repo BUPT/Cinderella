@@ -12,7 +12,7 @@ public class TEST {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String httpUrl = "http://localhost:8080/FinalTry/Webtest";
+		String httpUrl = "http://111.207.243.70:8088/IbotInfo/GetInfo";
 		String sendInfo="346786495@qq.com";
 		String recieveInfo="wnbupt@qq.com";
 		String timeInfo="2015-12-16-10:43";
