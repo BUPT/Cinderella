@@ -27,10 +27,10 @@ public class PostRequest
 		String sendInfo="346786495@qq.com";
 		String recieveInfo="wnbupt@qq.com";
 		String timeInfo="2015-12-16-10:43";
-		String subjectInfo="����demo������";
-		String bodyInfo="������ʵҲ�ǿ��Ե��������";
+		String subjectInfo="测试demo跑起来";
+		String bodyInfo="中文其实也是可以的嘛！！点赞";
 		String[] appendInfo={"D:/ibotest/test.ppt","D:/ibotest/test.doc"};
-		//String[] appendInfo={"null"};//û�и�����ʱ����null
+		//String[] appendInfo={"null"};
 		
 		String sender=URLEncoder.encode(sendInfo,"UTF-8");  
         String reciever=URLEncoder.encode(recieveInfo,"UTF-8"); 
@@ -47,29 +47,22 @@ public class PostRequest
         appendInfo[i]=URLEncoder.encode(appendInfo[i],"UTF-8");
     	sendMsg=sendMsg+appendInfo[i];	 
 		//System.out.println(sendMsg);
-		// ��������   
+
 		URL url = new URL(pathUrl);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setDoOutput(true);    // ���Է�������
-        conn.setDoInput(true);    // ���Խ�������
-        conn.setRequestMethod("POST");    // POST����
+        conn.setDoOutput(true);   
+        conn.setDoInput(true);    
+        conn.setRequestMethod("POST");    // POST方式
         conn.setRequestProperty
         ("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)");
         conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");       
         conn.connect();
-        //    д���POST����  
-        OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());       
         
-		
-        
-        
-        
-               
+        OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());                     
         osw.write(sendMsg);
         osw.flush();
         osw.close();
-        // ��ȡ��Ӧ����
-        
+              
         BufferedReader reader = null;
 	    StringBuffer sbf = new StringBuffer();	
         java.io.InputStream is = conn.getInputStream();
