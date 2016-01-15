@@ -8,7 +8,7 @@ import java.net.URLEncoder;
 import java.net.URLDecoder;
 import java.io.UnsupportedEncodingException;
 
-public class TEST {
+public class GetRequest {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -27,7 +27,7 @@ public class TEST {
 			httpArg=httpArg+appendInfo[i]+'|';
 		}
 		httpArg=httpArg+appendInfo[i];
-		TEST test=new TEST();
+		GetRequest test=new GetRequest();
 		String jsonResult = test.request(httpUrl, httpArg);
 		System.out.println(httpUrl+"?"+httpArg);
 		System.out.println(jsonResult);
