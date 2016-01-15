@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,6 +16,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
 import org.json.JSONStringer;
+import java.util.Map;
+
 
 /**
  * Servlet implementation class GetInfo
@@ -103,12 +106,45 @@ public class GetInfo extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.setContentType("text/plain");
-		PrintWriter out = response.getWriter();
-		out.println("use post!!!");
-		doGet(request, response); 
 		
+		request.setCharacterEncoding("utf-8");
+		//PrintWriter writer = response.getWriter();
+		
+		String sender=request.getParameter("sender");
+		String reciever=request.getParameter("reciever"); 
+        String sendtime=request.getParameter("sendtime");
+        String subject=request.getParameter("subject");
+        String body=request.getParameter("body");        
+        String temp[] =request.getParameter("attachment").split("\\|");	
+		
+        //String[] attachment=request.getParameter("attachment");
+		
+		String queryString="sender:"+sender+"reciever:"+reciever+"sendtime:"+sendtime+"subject:"+subject+"attachment:"+temp[0];
+		//writer.println("POST " + request.getRequestURL() + " " + queryString);
+		
+		System.out.println("POST " + request.getRequestURL() + " " + queryString);
+		
+		EmailInput email=new EmailInput();
+		BotResult botResult=new BotResult();
+		String Raw_filename="D:\\iBotest\\bizplan1.txt";
+		String Abstract_filename="D:\\iBotest\\abstract.txt";
+		
+		email.setSender(sender);
+		email.setReciever(reciever);
+		email.setSendTime(sendtime);
+		email.setEmailSubject(subject);
+		email.setEmailBody(body);
+		email.setEmailAttach(temp);
+		
+		MailTxtInput(Raw_filename,email);		
+		
+		Txt2Abstract(Raw_filename,Abstract_filename);		
+
+		botResult=Abstract2Meta(Abstract_filename);
+
+		botResult=Meta2Subness(botResult);
+		
+		iBotOutput(botResult,response);
 	}
 	public void MailTxtInput(String fileName,EmailInput email)
 	{
@@ -210,6 +246,7 @@ public class GetInfo extends HttpServlet {
 	}
 	public void iBotOutput(BotResult bot,HttpServletResponse response)
 	{
+		response.reset();
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/json; charset=UTF-8"); 
 		JSONStringer stringer = new JSONStringer();  

@@ -51,7 +51,7 @@ public class TEST {
 	        connection.connect();	      
 	        java.io.InputStream is = connection.getInputStream();
 	        //InputStream is = (InputStream) connection.getInputStream();
-	        reader = new BufferedReader(new InputStreamReader(is));
+	        reader = new BufferedReader(new InputStreamReader(is,"utf-8"));
 	        String strRead = null;
 	        while ((strRead = reader.readLine()) != null) {
 	        	//System.out.println(strRead);
