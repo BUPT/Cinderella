@@ -35,5 +35,11 @@ http://111.207.243.70:8088/IbotInfo/GetInfo?sender=346786495@qq.com&reciever=wnb
 
 请求示例 :运行ibot/api/APIuse/src/com/qq/PostRequest.java
 
+###运行环境  
+
+Eclipse IDE for Java Developers
+
+Version: Mars.1 Release (4.5.1)  
+JDK Version：1.8.0
 
 
