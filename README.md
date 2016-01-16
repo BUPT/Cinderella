@@ -30,6 +30,8 @@ Eclipse IDE for Java Developers
 
 Version: Mars.1 Release (4.5.1)  
 
-JDK Version：1.8.0
+JDK Version：1.8.0  
+###版本号
+20150116 0.1.0
 
 
