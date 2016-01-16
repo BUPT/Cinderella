@@ -23,7 +23,7 @@ public class PostRequest
 	public static void main(String[] args) throws Exception 
 	{
 		
-		String pathUrl = "http://111.207.243.70:8088/IbotInfo/GetInfo";  
+		String pathUrl = "http://localhost:8080/IbotInfo/GetInfo";  
 		
 		String sendInfo="346786495@qq.com";
 		String recieveInfo="wnbupt@qq.com";

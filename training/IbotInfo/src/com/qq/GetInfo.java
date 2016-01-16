@@ -37,69 +37,9 @@ public class GetInfo extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		EmailInput email=new EmailInput();
-		BotResult botResult=new BotResult();
-		String Raw_filename="D:\\iBotest\\bizplan1.txt";
-		String Abstract_filename="D:\\iBotest\\abstract.txt";
-		
-		String str=request.getQueryString();
-		System.out.println("str:"+str);
-		if(str==null)
-		{
-			str="you don't have any parameters";
-			response.getOutputStream().write(str.getBytes("UTF-8"));
-		}
-		else
-		{
-			str=URLDecoder.decode(str, "UTF-8");
-			String temp[] =str.split("&");
-			for(String word : temp)
-		    {
-				
-				String temp1[] =word.split("=");	
-				for(int i=0;i<temp1.length;i++)
-				{
-					if(temp1[i].equals("sender"))
-					{
-						email.setSender(temp1[i+1]);
-					}
-					else if(temp1[i].equals("reciever"))
-					{
-						email.setReciever(temp1[i+1]);
-					}
-					else if(temp1[i].equals("sendtime"))
-					{
-						email.setSendTime(temp1[i+1]);
-					}
-					else if(temp1[i].equals("subject"))
-					{
-						email.setEmailSubject(temp1[i+1]);
-					}
-					else if(temp1[i].equals("body"))
-					{
-						email.setEmailBody(temp1[i+1]);
-					}
-					else if(temp1[i].equals("attachment"))
-					{
-						String temp2[] =temp1[i+1].split("\\|");	
-						email.setEmailAttach(temp2);
-					}
-				}
-		    }
-				
-			MailTxtInput(Raw_filename,email);		
-			
-			Txt2Abstract(Raw_filename,Abstract_filename);		
-
-			botResult=Abstract2Meta(Abstract_filename);
-
-			botResult=Meta2Subness(botResult);
-			
-			iBotOutput(botResult,response);
-		}
-		
-		
-		
+	
+		String str="please use post method";
+		response.getOutputStream().write(str.toString().getBytes("UTF-8"));  		
 	}
 
 	/**
