@@ -22,7 +22,7 @@ body:邮件正文，默认值为“快塞给我一封邮件吧！”。
 
 attachment:附件在本地的路径，可以上传多个，以“|”分隔。默认值为“null”。  
 
-请求示例 :运行ibot/api/APIuse/src/com/qq/PostRequest.java
+请求示例 :运行ibot/api/APIuse（java project）
 
 ###运行环境  
 
