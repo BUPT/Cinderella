@@ -10,7 +10,7 @@ http://111.207.243.70:8088/IbotInfo/GetInfo
 ##### 访问方式  
 POST
 
-##### 参数
+##### 请求参数
 ![](readpic/parameter.png)
 
 ##### 返回值  
