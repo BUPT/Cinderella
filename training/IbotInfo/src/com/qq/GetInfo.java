@@ -56,16 +56,8 @@ public class GetInfo extends HttpServlet {
         String subject=request.getParameter("subject");
         String body=request.getParameter("body"); 
         String temp[]={"null"};
-        if(request.getParameter("attachment")=="")
-        {
-        	
-        }
-        else
-        {
-        	temp =request.getParameter("attachment").split("\\|");
-        }
-        		
-		
+        temp =request.getParameter("attachment").split("\\|");
+        				
         //String[] attachment=request.getParameter("attachment");
 		
 		String queryString="sender:"+sender+"reciever:"+reciever+"sendtime:"+sendtime+"subject:"+subject+"attachment:"+temp[0];
