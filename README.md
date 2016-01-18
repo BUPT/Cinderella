@@ -11,10 +11,10 @@ http://111.207.243.70:8088/IbotInfo/GetInfo
 POST
 
 ##### 参数
-![image](https://github.com/wnbupt/AKAMobi/ibot/raw/master/parameter.png)
+![](readpic/parameter.png)
 
 ##### 返回值  
-![image](https://github.com/wnbupt/AKAMobi/ibot/raw/master/result.png)
+![](readpic/result.png)
 ##### 返回示例
 {"地点":"北京","项目名称":"农夫之家","公司名称":"北京市农业科技有限公司","成立者":"张三","融资额度":30000,"出让股权":"20%","行业":"农业","置信程度":0.5}
 ##### curl示例
