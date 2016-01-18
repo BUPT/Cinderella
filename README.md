@@ -11,14 +11,14 @@ http://111.207.243.70:8088/IbotInfo/GetInfo
 POST
 
 ##### 参数
-![](https://github.com/wnbupt/AKAMobi/ibot/raw/master/parameter.png)
+![image](https://github.com/wnbupt/AKAMobi/ibot/raw/master/parameter.png)
 
 ##### 返回值  
-![](https://github.com/wnbupt/AKAMobi/ibot/raw/master/result.png)
+![image](https://github.com/wnbupt/AKAMobi/ibot/raw/master/result.png)
 ##### 返回示例
 {"地点":"北京","项目名称":"农夫之家","公司名称":"北京市农业科技有限公司","成立者":"张三","融资额度":30000,"出让股权":"20%","行业":"农业","置信程度":0.5}
 ##### curl示例
-curl -d "sender=&receiver=&sendtime=&subject=&body=&attachment=null" http://111.207.243.70:8088/IbotInfo/GetInfo
+	curl -d "sender=&receiver=&sendtime=&subject=&body=&attachment=null" http://111.207.243.70:8088/IbotInfo/GetInfo
 ##### java示例  
 
         String pathUrl = "http://111.207.243.70:8088/IbotInfo/GetInfo";  
