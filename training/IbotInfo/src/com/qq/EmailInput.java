@@ -1,13 +1,15 @@
 package com.qq;
 
+import java.util.ArrayList;
+
 public class EmailInput {
 	private String sender;
 	private String reciever;
 	private String sendTime;
 	private String emailSubject;
 	private String emailBody;
-	private String[] emailAttach={"null","null","null","null"};
-	
+	//private String[] emailAttach={"null","null","null","null"};
+	private ArrayList<String> emailAttach = new ArrayList<String> (); 
 	
 	public EmailInput()
 	{
@@ -59,12 +61,13 @@ public class EmailInput {
 		this.emailBody = emailBody;
 	}
 
-	public String[] getEmailAttach() {
+	public ArrayList<String> getEmailAttach() {
 		return emailAttach;
 	}
 
-	public void setEmailAttach(String[] emailAttach) {
+	public void setEmailAttach(ArrayList<String> emailAttach) {
 		this.emailAttach = emailAttach;
 	}
+    
 	
 }

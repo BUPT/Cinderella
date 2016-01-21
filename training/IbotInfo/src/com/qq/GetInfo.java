@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
@@ -13,9 +14,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
 import org.json.JSONStringer;
+
+import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -55,15 +59,25 @@ public class GetInfo extends HttpServlet {
         String sendtime=request.getParameter("sendtime");
         String subject=request.getParameter("subject");
         String body=request.getParameter("body"); 
-        String temp[]={"null"};
-        temp =request.getParameter("attachment").split("\\|");
-        				
-        //String[] attachment=request.getParameter("attachment");
+        ArrayList<String> attachTemp = new ArrayList<String> ();
+        if(request.getParameter("attachment").toString().equals("null"))
+        {
+        	attachTemp.add("null");
+        }
+        else
+        {
+        	String temp[]=request.getParameter("attachment").split("\\|");
+        	for(String tmp:temp)
+            { 		  
+            	  String res = downloadFromUrl(tmp,"D:/TestFile/");  
+                  System.out.println(res);  
+                  attachTemp.add(res);
+            }
+        }
+        
+		//String queryString="sender:"+sender+"reciever:"+reciever+"sendtime:"+sendtime+"subject:"+subject+"attachment:"+temp[0];
 		
-		String queryString="sender:"+sender+"reciever:"+reciever+"sendtime:"+sendtime+"subject:"+subject+"attachment:"+temp[0];
-		//writer.println("POST " + request.getRequestURL() + " " + queryString);
-		
-		System.out.println("POST " + request.getRequestURL() + " " + queryString);
+		//System.out.println("POST " + request.getRequestURL() + " " + queryString);
 		
 		EmailInput email=new EmailInput();
 		BotResult botResult=new BotResult();
@@ -75,7 +89,7 @@ public class GetInfo extends HttpServlet {
 		email.setSendTime(sendtime);
 		email.setEmailSubject(subject);
 		email.setEmailBody(body);
-		email.setEmailAttach(temp);
+		email.setEmailAttach(attachTemp);
 		
 		MailTxtInput(Raw_filename,email);		
 		
@@ -87,6 +101,32 @@ public class GetInfo extends HttpServlet {
 		
 		iBotOutput(botResult,response);
 	}
+	public static String downloadFromUrl(String url,String dir) {  
+		String fileName;
+        try {  
+            URL httpurl = new URL(url);  
+            fileName = getFileNameFromUrl(url);  
+            System.out.println(fileName);  
+            File f = new File(dir + fileName);  
+            FileUtils.copyURLToFile(httpurl, f);  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+            return "Fault!";  
+        }   
+        return dir + fileName;  
+    }  
+      
+    public static String getFileNameFromUrl(String url){  
+        String name = new Long(System.currentTimeMillis()).toString() + ".X";  
+        int index = url.lastIndexOf("/");  
+        if(index > 0){  
+            name = url.substring(index + 1);  
+            if(name.trim().length()>0){  
+                return name;  
+            }  
+        }  
+        return name;  
+    }  
 	public void MailTxtInput(String fileName,EmailInput email)
 	{
 		String sendInfo=email.getSender();
@@ -94,33 +134,41 @@ public class GetInfo extends HttpServlet {
 		String timeInfo=email.getSendTime();
 		String subjectInfo=email.getEmailSubject();
 		String bodyInfo=email.getEmailBody();
-		String[] appendInfo=email.getEmailAttach();
+		ArrayList<String> appendInfo = email.getEmailAttach();
 		Tika tika = new Tika();
 		String text = "";
-		try 
-		{			
-			for(int i=0;i<appendInfo.length;i++)
+		if(appendInfo.get(0).equals("null"))
+		{
+			text="您没有指定任何附件";
+			System.out.println(text);
+		}
+		else
+		{
+			try 
+			{	
+				for(int i=0;i<appendInfo.size();i++)
+				{
+					File file=new File(appendInfo.get(i));
+					if(!file.exists())  
+					{
+						text = text+"您指定的第"+(i+1)+"个附件不存在!\n";
+						System.out.println(text);
+					}
+					else
+					{
+						text = text+"\r\n"+"附件"+(i+1)+"内容:"+tika.parseToString(file);
+					}
+					
+				}
+			} 
+			catch (IOException e) 
 			{
-				File file=new File(appendInfo[i]);
-				if(!file.exists())  
-				{
-					text = text+"您指定的附件："+appendInfo[i]+"不存在";
-					System.out.println(text);
-				}
-				else
-				{
-					text = text+"\r\n"+"附件"+(i+1)+"内容:"+tika.parseToString(file);
-				}
-				
-			}		
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-		} 
-		catch (TikaException e) 
-		{
-			e.printStackTrace();
+				e.printStackTrace();
+			} 
+			catch (TikaException e) 
+			{
+				e.printStackTrace();
+			}			
 		}
 		try
 		{
@@ -146,6 +194,7 @@ public class GetInfo extends HttpServlet {
 		{
 			e.printStackTrace();
 		}			
+		
 	}
 	public void Txt2Abstract(String infileName,String outfilename) 
 	{
