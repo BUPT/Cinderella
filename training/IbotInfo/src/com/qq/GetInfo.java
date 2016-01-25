@@ -19,6 +19,9 @@ import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
 import org.json.JSONStringer;
 
+import com.jspsmart.upload.SmartUpload;
+import com.jspsmart.upload.SmartUploadException;
+
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -53,32 +56,40 @@ public class GetInfo extends HttpServlet {
 		
 		request.setCharacterEncoding("utf-8");
 		//PrintWriter writer = response.getWriter();
-		
-		String sender=request.getParameter("sender");
-		String reciever=request.getParameter("reciever"); 
-        String sendtime=request.getParameter("sendtime");
-        String subject=request.getParameter("subject");
-        String body=request.getParameter("body"); 
-        ArrayList<String> attachTemp = new ArrayList<String> ();
-        if(request.getParameter("attachment").toString().equals("null"))
-        {
-        	attachTemp.add("null");
-        }
-        else
-        {
-        	String temp[]=request.getParameter("attachment").split("\\|");
-        	for(String tmp:temp)
-            { 		  
-            	  String res = downloadFromUrl(tmp,"D:/TestFile/");  
-                  System.out.println(res);  
-                  attachTemp.add(res);
-            }
-        }
+		String sender=URLDecoder.decode(request.getHeader("sender"), "utf-8") ;
+		String reciever=URLDecoder.decode(request.getHeader("reciever"), "utf-8"); 
+        String sendtime=URLDecoder.decode(request.getHeader("sendtime"), "utf-8");
+        String subject=URLDecoder.decode(request.getHeader("subject"), "utf-8");       
+        String body=URLDecoder.decode(request.getHeader("body"), "utf-8");
         
-		//String queryString="sender:"+sender+"reciever:"+reciever+"sendtime:"+sendtime+"subject:"+subject+"attachment:"+temp[0];
-		
-		//System.out.println("POST " + request.getRequestURL() + " " + queryString);
-		
+        ArrayList<String> attachTemp = new ArrayList<String> ();
+        
+        String realPath = getServletContext().getRealPath("/") + "RecFile";
+		System.out.println(realPath);
+		File fileupload = new File(realPath);
+		if(!fileupload.exists()){
+			fileupload.mkdir();
+		}
+		SmartUpload su=new SmartUpload();
+		su.initialize(getServletConfig(), request, response);
+		try 
+		{
+			su.upload();
+			int count=su.save(realPath);
+			for(int i=0;i<su.getFiles().getCount();i++)
+			{
+				com.jspsmart.upload.File tempFile=su.getFiles().getFile(i);
+				System.out.println(realPath+"\\"+tempFile.getFileName());
+				attachTemp.add(realPath+"\\"+tempFile.getFileName());
+			}
+			System.out.println("count:"+count);
+		} 
+		catch (SmartUploadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        
 		EmailInput email=new EmailInput();
 		BotResult botResult=new BotResult();
 		String Raw_filename="D:\\iBotest\\bizplan1.txt";
@@ -101,32 +112,7 @@ public class GetInfo extends HttpServlet {
 		
 		iBotOutput(botResult,response);
 	}
-	public static String downloadFromUrl(String url,String dir) {  
-		String fileName;
-        try {  
-            URL httpurl = new URL(url);  
-            fileName = getFileNameFromUrl(url);  
-            System.out.println(fileName);  
-            File f = new File(dir + fileName);  
-            FileUtils.copyURLToFile(httpurl, f);  
-        } catch (Exception e) {  
-            e.printStackTrace();  
-            return "Fault!";  
-        }   
-        return dir + fileName;  
-    }  
-      
-    public static String getFileNameFromUrl(String url){  
-        String name = new Long(System.currentTimeMillis()).toString() + ".X";  
-        int index = url.lastIndexOf("/");  
-        if(index > 0){  
-            name = url.substring(index + 1);  
-            if(name.trim().length()>0){  
-                return name;  
-            }  
-        }  
-        return name;  
-    }  
+	
 	public void MailTxtInput(String fileName,EmailInput email)
 	{
 		String sendInfo=email.getSender();
@@ -156,9 +142,8 @@ public class GetInfo extends HttpServlet {
 					}
 					else
 					{
-						text = text+"\r\n"+"附件"+(i+1)+"内容:"+tika.parseToString(file);
-					}
-					
+						text = text+"\r\n"+"\r\n"+"附件"+(i+1)+"内容:"+"\r\n"+tika.parseToString(file);
+					}					
 				}
 			} 
 			catch (IOException e) 
