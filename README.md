@@ -58,7 +58,7 @@ POST
       <td>attachment</td>
       <td>String数组</td>
       <td>是</td>
-      <td>{null}</td>
+      <td>{"D:\\ibotest\\test.ppt"}</td>
       <td>附件在本地的路径，可以上传多个，以“|”分隔</td>
    </tr>
 </table>
@@ -115,61 +115,88 @@ POST
 ##### 返回示例
 {"地点":"北京","项目名称":"农夫之家","公司名称":"北京市农业科技有限公司","成立者":"张三","融资额度":30000,"出让股权":"20%","行业":"农业","置信程度":0.5}
 ##### curl示例
-	curl -d "sender=346786495@qq.com&reciever=wnbupt@qq.com&sendtime=2015-12-16-10:43&subject=测试demo&body=快塞给我一封邮件吧！&attachment=null" http://111.207.243.70:8088/IbotInfo/GetInfo
+	curl -F upload=@D:\ibotest\test.ppt -H "sender:346786495@qq.com" -H "reciever:wnbupt@qq.com" -H "sendtime=2015-12-16-10:43" -H "subject:测试demo" -H "body:快塞给我一封邮件吧！" http://111.207.243.70:8088/IbotInfo/GetInfo
 ##### java示例  
-
-        String pathUrl = "http://111.207.243.70:8088/IbotInfo/GetInfo";  
-		String sendInfo="346786495@qq.com";
-		String recieveInfo="wnbupt@qq.com";
-		String timeInfo="2015-12-16-10:43";
-		String subjectInfo="测试demo";
-		String bodyInfo="快塞给我一封邮件吧！";
-		String[] appendInfo={"null"};//本地的附件地址
-		
-		String sender=URLEncoder.encode(sendInfo,"UTF-8");  
-        String reciever=URLEncoder.encode(recieveInfo,"UTF-8"); 
-        String sendtime=URLEncoder.encode(timeInfo,"UTF-8"); 
-        String subject=URLEncoder.encode(subjectInfo,"UTF-8"); 
-        String body=URLEncoder.encode(bodyInfo,"UTF-8");   
-        String sendMsg=("sender="+sender+"&reciever="+reciever+"&sendtime="+sendtime+"&subject="+subject+"&body="+body+"&attachment=");
-        int i;
-        for(i=0;i<appendInfo.length-1;i++)
-        {
-        	appendInfo[i]=URLEncoder.encode(appendInfo[i],"UTF-8");
-        	sendMsg=sendMsg+appendInfo[i]+"|";
-        }
-        appendInfo[i]=URLEncoder.encode(appendInfo[i],"UTF-8");
-    	sendMsg=sendMsg+appendInfo[i];	 
-		//System.out.println(sendMsg);
-
-		URL url = new URL(pathUrl);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setDoOutput(true);   
-        conn.setDoInput(true);    
-        conn.setRequestMethod("POST");    // POST方式
-        conn.setRequestProperty
-        ("User-Agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.0)");
-        conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");       
-        conn.connect();
-        
-        OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());                     
-        osw.write(sendMsg);
-        osw.flush();
-        osw.close();
-              
-        BufferedReader reader = null;
-	    StringBuffer sbf = new StringBuffer();	
-        java.io.InputStream is = conn.getInputStream();
-        //InputStream is = (InputStream) connection.getInputStream();
-        reader = new BufferedReader(new InputStreamReader(is,"utf-8"));
-        String strRead = null;
-        while ((strRead = reader.readLine()) != null) {
-        	//System.out.println(strRead);
-            sbf.append(strRead);
-            sbf.append("\r\n");
-        }
-        reader.close();
-        System.out.println(sbf);
+	String sendInfo = "346786495@qq.com";
+	String recieveInfo = "wnbupt@qq.com";
+	String timeInfo = "2015-12-16-10:43";
+	String subjectInfo = "测试demo";
+	String bodyInfo = "快塞给我一封邮件吧！";
+	String[] uploadFiles = {"D:\\ibotest\\test.ppt"};
+	/**
+	 *  对传入的参数进行utf-8编码
+	 */
+	String sender = URLEncoder.encode(sendInfo, "UTF-8");
+	String reciever = URLEncoder.encode(recieveInfo, "UTF-8");
+	String sendtime = URLEncoder.encode(timeInfo, "UTF-8");
+	String subject = URLEncoder.encode(subjectInfo, "UTF-8");
+	String body = URLEncoder.encode(bodyInfo, "UTF-8");
+	/**
+	 *  准备上传附件的文件流写入
+	 */
+	String end = "\r\n";
+	String twoHyphens = "--";
+	String boundary = "*****";
+	/**
+	 * 开始建立连接
+	 */
+	String actionUrl = "http://localhost:8080/IbotInfo/GetInfo";
+	URL url = new URL(actionUrl);
+	HttpURLConnection con = (HttpURLConnection) url.openConnection();
+	con.setDoInput(true);
+	con.setDoOutput(true);
+	con.setUseCaches(false);
+	con.setRequestMethod("POST");
+	con.setRequestProperty("Connection", "Keep-Alive");
+	con.setRequestProperty("Charset", "UTF-8");
+	con.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+	con.addRequestProperty("sender", sender);
+	con.addRequestProperty("reciever", reciever);
+	con.addRequestProperty("sendtime", sendtime);
+	con.addRequestProperty("subject", subject);
+	con.addRequestProperty("body", body);
+	/**
+	 * 将上传附件写入文件流
+	 */
+	DataOutputStream ds = new DataOutputStream(con.getOutputStream());
+	for (int i = 0; i < uploadFiles.length; i++) 
+	{
+		String uploadFile = uploadFiles[i];
+		String filename = uploadFile.substring(uploadFile.lastIndexOf("//") + 1);
+		ds.writeBytes(twoHyphens + boundary + end);
+		ds.writeBytes("Content-Disposition: form-data; " + "name=\"file" + i + "\";" + "filename=\"" +filename
+				+ "\"" + end);
+		ds.writeBytes(end);
+		FileInputStream fStream = new FileInputStream(uploadFile);
+		int bufferSize = 1024;
+		byte[] buffer = new byte[bufferSize];
+		int length = -1;
+		while ((length = fStream.read(buffer)) != -1) 
+		{
+			ds.write(buffer, 0, length);
+		}
+		ds.writeBytes(end);
+		/* close streams */
+		fStream.close();				
+	}			
+	ds.writeBytes(twoHyphens + boundary + twoHyphens + end);
+	ds.flush();
+	ds.close();			
+	/**
+	 * 接收来自服务器的消息
+	 */
+	DataInputStream in = new DataInputStream(con.getInputStream());
+	BufferedReader reader = null;
+	StringBuffer sbf = new StringBuffer();
+	reader = new BufferedReader(new InputStreamReader(in, "utf-8"));
+	String strRead = null;
+	while ((strRead = reader.readLine()) != null) {
+		sbf.append(strRead);
+		sbf.append("\r\n");
+	}
+	reader.close();
+	in.close();
+	System.out.println(sbf);
 
 
 
