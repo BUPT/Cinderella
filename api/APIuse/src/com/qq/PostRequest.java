@@ -56,7 +56,7 @@ public class PostRequest {
 		/**
 		 * 开始建立连接
 		 */
-		String actionUrl = "http://localhost:8080/IbotInfo/GetInfo";
+		String actionUrl = "http://111.207.243.70:8088/IbotInfo/GetInfo";
 		try {
 			URL url = new URL(actionUrl);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
