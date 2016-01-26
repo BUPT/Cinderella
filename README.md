@@ -37,7 +37,7 @@ POST
       <td>sendtime</td>
       <td>String</td>
       <td>是</td>
-      <td>2015-12-16-10:43</td>
+      <td>2015-12-16 10:43</td>
       <td>邮件的发送时间</td>
    </tr>
    <tr>
