@@ -26,27 +26,27 @@ public class PostRequest {
 	public static void main(String[] args) throws Exception {
 		/**
 		 * POST请求待发送的参数
-		 * sendInfo：发件人
-		 * recieveInfo：收件人
-		 * timeInfo：发件时间
-		 * subjectInfo：件主题
-		 * bodyInfo：邮件内容
+		 * sender：发件人
+		 * reciever：收件人
+		 * sendtime：发件时间
+		 * subject：件主题
+		 * body：邮件内容
 		 * uploadFiles：本地附件的路径
 		 */
-		String sendInfo = "346786495@qq.com";
-		String recieveInfo = "wnbupt@qq.com";
-		String timeInfo = "2015-12-16-10:43";
-		String subjectInfo = "测试demo";
-		String bodyInfo = "快塞给我一封邮件吧！";
-		String[] uploadFiles = {"D:\\ibotest\\test.ppt"};
+		String sender = "346786495@qq.com";
+		String reciever = "wnbupt@qq.com";
+		String sendtime = "2015-12-16 10:43";
+		String subject = "测试demo";
+		String body = "快塞给我一封邮件吧！";
+		String[] uploadFiles = {"D:\\ibotest\\test.ppt","D:\\ibotest\\test.doc"};
 		/**
 		 *  对传入的参数进行utf-8编码
 		 */
-		String sender = URLEncoder.encode(sendInfo, "UTF-8");
-		String reciever = URLEncoder.encode(recieveInfo, "UTF-8");
-		String sendtime = URLEncoder.encode(timeInfo, "UTF-8");
-		String subject = URLEncoder.encode(subjectInfo, "UTF-8");
-		String body = URLEncoder.encode(bodyInfo, "UTF-8");
+		sender = URLEncoder.encode(sender, "UTF-8");
+		reciever = URLEncoder.encode(reciever, "UTF-8");
+		sendtime = URLEncoder.encode(sendtime, "UTF-8");
+		subject = URLEncoder.encode(subject, "UTF-8");
+		body = URLEncoder.encode(body, "UTF-8");
 		/**
 		 *  准备上传附件的文件流写入
 		 */
