@@ -55,11 +55,11 @@ POST
       <td>邮件正文</td>
    </tr>
    <tr>
-      <td>attachment</td>
+      <td>uploadFiles</td>
       <td>String数组</td>
       <td>是</td>
       <td>{"D:\\ibotest\\test.ppt"}</td>
-      <td>附件在本地的路径，可以上传多个，以“|”分隔</td>
+      <td>附件在本地的路径，可以上传多个</td>
    </tr>
 </table>
 
