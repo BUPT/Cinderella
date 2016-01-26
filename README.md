@@ -58,8 +58,8 @@ POST
       <td>uploadFiles</td>
       <td>String数组</td>
       <td>是</td>
-      <td>{"D:\\ibotest\\test.ppt"}</td>
-      <td>附件在本地的路径，可以上传多个</td>
+      <td>{"D:\\ibotest\\test.ppt","D:\\ibotest\\test.doc"}</td>
+      <td>附件在本地的路径，可以上传多个附件</td>
    </tr>
 </table>
 
@@ -115,7 +115,7 @@ POST
 ##### 返回示例
 {"地点":"北京","项目名称":"农夫之家","公司名称":"北京市农业科技有限公司","成立者":"张三","融资额度":30000,"出让股权":"20%","行业":"农业","置信程度":0.5}
 ##### curl示例
-	curl -F uploadFiles=@D:\ibotest\test.ppt -H "sender:346786495@qq.com" -H "reciever:wnbupt@qq.com" -H "sendtime:2015-12-16 10:43" -H "subject:测试demo" -H "body:快塞给我一封邮件吧！" http://111.207.243.70:8088/IbotInfo/GetInfo
+	curl -F uploadFiles=@D:\ibotest\test.ppt -F uploadFiles=@D:\ibotest\test.doc -H "sender:346786495@qq.com" -H "reciever:wnbupt@qq.com" -H "sendtime:2015-12-16 10:43" -H "subject:测试demo" -H "body:快塞给我一封邮件吧！" http://111.207.243.70:8088/IbotInfo/GetInfo
 ##### curl返回示例	
 	{
 	    "地点": "北京",
@@ -130,10 +130,10 @@ POST
 ##### java示例  
 	String sendInfo = "346786495@qq.com";
 	String recieveInfo = "wnbupt@qq.com";
-	String timeInfo = "2015-12-16-10:43";
+	String timeInfo = "2015-12-16 10:43";
 	String subjectInfo = "测试demo";
 	String bodyInfo = "快塞给我一封邮件吧！";
-	String[] uploadFiles = {"D:\\ibotest\\test.ppt"};
+	String[] uploadFiles = {"D:\\ibotest\\test.ppt","D:\\ibotest\\test.doc"};
 	/**
 	 *  对传入的参数进行utf-8编码
 	 */
