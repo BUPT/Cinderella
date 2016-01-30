@@ -15,16 +15,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
+import org.json.JSONObject;
 import org.json.JSONStringer;
-
+import org.json.JSONObject; 
 import com.jspsmart.upload.SmartUpload;
 import com.jspsmart.upload.SmartUploadException;
 
 import java.util.ArrayList;
 import java.util.Map;
-
 
 /**
  * Servlet implementation class GetInfo
@@ -55,13 +59,6 @@ public class GetInfo extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		request.setCharacterEncoding("utf-8");
-		//PrintWriter writer = response.getWriter();
-		String sender=URLDecoder.decode(request.getHeader("sender"), "utf-8") ;
-		String reciever=URLDecoder.decode(request.getHeader("reciever"), "utf-8"); 
-        String sendtime=URLDecoder.decode(request.getHeader("sendtime"), "utf-8");
-        String subject=URLDecoder.decode(request.getHeader("subject"), "utf-8");       
-        String body=URLDecoder.decode(request.getHeader("body"), "utf-8");
-        
         ArrayList<String> attachTemp = new ArrayList<String> ();
         
         String realPath = getServletContext().getRealPath("/") + "RecFile";
@@ -72,9 +69,27 @@ public class GetInfo extends HttpServlet {
 		}
 		SmartUpload su=new SmartUpload();
 		su.initialize(getServletConfig(), request, response);
+		com.jspsmart.upload.Request req = su.getRequest();
+		
+		String sender=null;
+		String receiver=null; 
+        String sendtime=null;
+        String subject=null;
+        String body=null; 
+        String revdata=null;
+        
 		try 
 		{
 			su.upload();
+			revdata=req.getParameter("DATA");
+	        System.out.println(revdata);
+	        JSONObject obj = new JSONObject(revdata);
+	        sender=(String) obj.get("sender");
+	        receiver=(String) obj.get("receiver"); 
+	        sendtime=(String) obj.get("sendtime");
+	        subject=(String) obj.get("subject");
+	        body=(String) obj.get("body");   
+	       
 			int count=su.save(realPath);
 			for(int i=0;i<su.getFiles().getCount();i++)
 			{
@@ -96,7 +111,7 @@ public class GetInfo extends HttpServlet {
 		String Abstract_filename="D:\\iBotest\\abstract.txt";
 		
 		email.setSender(sender);
-		email.setReciever(reciever);
+		email.setReceiver(receiver);
 		email.setSendTime(sendtime);
 		email.setEmailSubject(subject);
 		email.setEmailBody(body);
@@ -107,8 +122,6 @@ public class GetInfo extends HttpServlet {
 		Txt2Abstract(Raw_filename,Abstract_filename);		
 
 		botResult=Abstract2Meta(Abstract_filename);
-
-		botResult=Meta2Subness(botResult);
 		
 		iBotOutput(botResult,response);
 	}
@@ -116,7 +129,7 @@ public class GetInfo extends HttpServlet {
 	public void MailTxtInput(String fileName,EmailInput email)
 	{
 		String sendInfo=email.getSender();
-		String recieveInfo=email.getReciever();
+		String receiveInfo=email.getReceiver();
 		String timeInfo=email.getSendTime();
 		String subjectInfo=email.getEmailSubject();
 		String bodyInfo=email.getEmailBody();
@@ -166,7 +179,7 @@ public class GetInfo extends HttpServlet {
 		    FileOutputStream fw = new FileOutputStream(file.getAbsoluteFile());
 		    OutputStreamWriter bw = new OutputStreamWriter(fw, "UTF-8");
 		    bw.write("发件人："+sendInfo+"\r\n");
-		    bw.write("收件人："+recieveInfo+"\r\n"); 
+		    bw.write("收件人："+receiveInfo+"\r\n"); 
 		    bw.write("发件时间："+timeInfo+"\r\n");
 		    bw.write("邮件主题："+subjectInfo+"\r\n");
 		    bw.write("邮件正文："+bodyInfo+"\r\n");
@@ -196,8 +209,10 @@ public class GetInfo extends HttpServlet {
 		String tranStock="20%";
 		String projectName="农夫之家";
 		String companyName="北京市农业科技有限公司";
-		String founderName="张三";
-		String bizArea="农业";
+		String[] founder={"张三","李四","王五"};
+		String[] area={"农业","科技"};
+		ArrayList<String> founderName=new ArrayList<String> ();
+		ArrayList<String> bizArea=new ArrayList<String> ();
 		
 		BotResult bot=new BotResult();
 		bot.setLocation(location);
@@ -205,18 +220,17 @@ public class GetInfo extends HttpServlet {
 		bot.setTranStock(tranStock);
 		bot.setProjectName(projectName);
 		bot.setCompanyName(companyName);
+		for(int i=0;i<founder.length;i++)
+		{
+			founderName.add(founder[i]);
+		}
+		for(int i=0;i<area.length;i++)
+		{
+			bizArea.add(area[i]);
+		}
 		bot.setFounderName(founderName);
 		bot.setBizArea(bizArea);
-		bot.setSubness(0);
 		
-		return bot;
-	}
-	public BotResult Meta2Subness(BotResult bot)
-	{
-		//置信度获取模块
-		//输入为BotResult对象，输出为置信度subness
-		double subness=0.5;
-		bot.setSubness(subness);
 		return bot;
 	}
 	public void iBotOutput(BotResult bot,HttpServletResponse response)
@@ -227,14 +241,13 @@ public class GetInfo extends HttpServlet {
 		JSONStringer stringer = new JSONStringer();  
 
 		try {
-			 stringer.object().key("地点").value(bot.getLocation()).  
-		        key("项目名称").value(bot.getProjectName()).  
-		        key("公司名称").value(bot.getCompanyName()).  
-		        key("成立者").value(bot.getFounderName()).
-		        key("融资额度").value(bot.getFinanceLimit()).
-		        key("出让股权").value(bot.getTranStock()).
-		        key("行业").value(bot.getBizArea()).
-		        key("置信程度").value(bot.getSubness()).endObject(); 
+			 stringer.object().key("city").value(bot.getLocation()).  
+		        key("startup").value(bot.getProjectName()).  
+		        key("company").value(bot.getCompanyName()).  
+		        key("founders").value(bot.getFounderName()).
+		        key("money").value(bot.getFinanceLimit()).
+		        key("equity").value(bot.getTranStock()).
+		        key("industries").value(bot.getBizArea()).endObject(); 
 				System.out.println("---------------输出ing---------------------");
 			response.getOutputStream().write(stringer.toString().getBytes("UTF-8"));  			
 		} 

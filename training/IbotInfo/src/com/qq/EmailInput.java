@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class EmailInput {
 	private String sender;
-	private String reciever;
+	private String receiver;
 	private String sendTime;
 	private String emailSubject;
 	private String emailBody;
@@ -14,7 +14,7 @@ public class EmailInput {
 	public EmailInput()
 	{
 		sender="none";
-		reciever="none";
+		receiver="none";
 		sendTime="none";
 		emailSubject="none";
 		emailBody="none";
@@ -29,12 +29,12 @@ public class EmailInput {
 		this.sender = sender;
 	}
 
-	public String getReciever() {
-		return reciever;
+	public String getReceiver() {
+		return receiver;
 	}
 
-	public void setReciever(String reciever) {
-		this.reciever = reciever;
+	public void setReceiver(String receiver) {
+		this.receiver = receiver;
 	}
 
 	public String getSendTime() {

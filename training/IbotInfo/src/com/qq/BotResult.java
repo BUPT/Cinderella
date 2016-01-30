@@ -1,15 +1,16 @@
 package com.qq;
 
+import java.util.ArrayList;
+
 public class BotResult {
 	private String location;
 	private int financeLimit;
 	private String tranStock;
 	private String projectName;
 	private String companyName;
-	private String founderName;
-	private String bizArea;
-	private double subness;
-	
+	private ArrayList<String> founderName= new ArrayList<String> ();
+	private ArrayList<String> bizArea = new ArrayList<String> ();
+		
 	public BotResult()
 	{
 		location="none";
@@ -17,9 +18,6 @@ public class BotResult {
 		tranStock="none";
 		projectName="none";
 		companyName="none";
-		founderName="none";
-		bizArea="none";
-		subness=0;
 	}
 	
 	public String getLocation() {
@@ -52,24 +50,21 @@ public class BotResult {
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
 	}
-	public String getFounderName() {
+
+	public ArrayList<String> getFounderName() {
 		return founderName;
 	}
-	public void setFounderName(String founderName) {
+
+	public void setFounderName(ArrayList<String> founderName) {
 		this.founderName = founderName;
 	}
-	public String getBizArea() {
+
+	public ArrayList<String> getBizArea() {
 		return bizArea;
 	}
-	public void setBizArea(String bizArea) {
+
+	public void setBizArea(ArrayList<String> bizArea) {
 		this.bizArea = bizArea;
 	}
-
-	public double getSubness() {
-		return subness;
-	}
-
-	public void setSubness(double subness) {
-		this.subness = subness;
-	}
+	
 }
