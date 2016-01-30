@@ -71,63 +71,63 @@ POST
       <td>描述</td>
    </tr>
    <tr>
-      <td>地点</td>
+      <td>city</td>
       <td>String</td>
       <td>公司所处城市</td>
    </tr>
    <tr>
-      <td>项目名称</td>
+      <td>startup</td>
       <td>String</td>
       <td>项目名称</td>
    </tr>
    <tr>
-      <td>公司名称</td>
+      <td>company</td>
       <td>String</td>
       <td>公司名称</td>
    </tr>
    <tr>
-      <td>成立者</td>
-      <td>String</td>
+      <td>founders</td>
+      <td>String数组</td>
       <td>公司的成立者</td>
    </tr>
    <tr>
-      <td>融资额度</td>
+      <td>money</td>
       <td>int</td>
       <td>公司需要资金支持的额度</td>
    </tr>
    <tr>
-      <td>出让股权</td>
+      <td>equity</td>
       <td>string</td>
       <td>公司愿意付出的股权份额</td>
    </tr>
    <tr>
-      <td>行业</td>
-      <td>String</td>
+      <td>industries</td>
+      <td>String数组</td>
       <td>公司所属领域</td>
-   </tr>
-   <tr>
-      <td>置信程度</td>
-      <td>double</td>
-      <td>取值范围在0-1之间，取值越大表示本项目的投资价值越高</td>
    </tr>
 </table>
 
 ##### 返回示例
-{"地点":"北京","项目名称":"农夫之家","公司名称":"北京市农业科技有限公司","成立者":"张三","融资额度":30000,"出让股权":"20%","行业":"农业","置信程度":0.5}
+{"city":"北京","startup":"农夫之家","company":"北京市农业科技有限公司","founders":["张三","李四","王五"],"money":30000,"equity":"20%","industries":["农业","科技"]}
 ##### curl示例
 	curl -F uploadFiles=@D:\ibotest\test.ppt -F uploadFiles=@D:\ibotest\test.doc -F "DATA={\"sender\":\"346786495@qq.com\",\"receiver\":\"wnbupt@qq.com\",\"sendtime\":\"2015-12-16 10:43\",\"subject\":\"测试demo\",\"body\":\"快塞给我一封邮件吧！\"}" http://localhost:8080/IbotInfo/GetInfo
 ##### curl返回示例	
-	{
-	    "地点": "北京",
-	    "项目名称": "农夫之家",
-	    "公司名称": "北京市农业科技有限公司",
-	    "成立者": "张三",
-	    "融资额度": 30000,
-	    "出让股权": "20%",
-	    "行业": "农业",
-	    "置信程度": 0.5
-	}
-
+{
+    "city": "北京",
+    "startup": "农夫之家",
+    "company": "北京市农业科技有限公司",
+    "founders": [
+        "张三",
+        "李四",
+        "王五"
+    ],
+    "money": 30000,
+    "equity": "20%",
+    "industries": [
+        "农业",
+        "科技"
+    ]
+}
 
 
 
