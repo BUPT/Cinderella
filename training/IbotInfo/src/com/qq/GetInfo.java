@@ -100,7 +100,6 @@ public class GetInfo extends HttpServlet {
 			System.out.println("count:"+count);
 		} 
 		catch (SmartUploadException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         
