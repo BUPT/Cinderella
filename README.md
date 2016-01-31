@@ -113,7 +113,7 @@ POST
 ######有附件上传
 	curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\test.ppt -F uploadFiles=@D:\ibotest\test.doc -F "DATA={\"sender\":\"346786495@qq.com\",\"receiver\":\"wnbupt@qq.com\",\"sendtime\":\"2015-12-16 10:43\",\"subject\":\"测试demo\",\"body\":\"快塞给我一封邮件吧！\"}" http://localhost:8080/IbotInfo/GetInfo
 ######无附件上传
-	curl -H "Content-Type:application/json" -d "{"sender":"346786495@qq.com","receiver":"wnbupt@qq.com","sendtime":"2015-12-16 10:43","subject":"测试demo","body":"快塞给我一封邮件吧！"}" http://localhost:8080/IbotInfo/GetInfo
+	curl -H "Content-Type:application/json" -X POST -d {/"sender/":/"346786495@qq.com/",/"receiver/":/"wnbupt@qq.com/",/"sendtime/":/"2015-12-16 10:43/",/"subject/":/"测试demo/",/"body/":/"快塞给我一封邮件吧！/"} http://localhost:8080/IbotInfo/GetInfo
 ##### curl返回示例	
 	{
 	    "city": "北京",
