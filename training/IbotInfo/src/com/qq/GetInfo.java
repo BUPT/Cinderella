@@ -1,5 +1,6 @@
 package com.qq;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,8 +27,11 @@ import org.json.JSONStringer;
 import org.json.JSONObject; 
 import com.jspsmart.upload.SmartUpload;
 import com.jspsmart.upload.SmartUploadException;
+import org.json.*;
+import net.sf.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -59,56 +63,82 @@ public class GetInfo extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		request.setCharacterEncoding("utf-8");
-        ArrayList<String> attachTemp = new ArrayList<String> ();
-        
-        String realPath = getServletContext().getRealPath("/") + "RecFile";
-		System.out.println(realPath);
-		File fileupload = new File(realPath);
-		if(!fileupload.exists()){
-			fileupload.mkdir();
-		}
-		SmartUpload su=new SmartUpload();
-		su.initialize(getServletConfig(), request, response);
-		com.jspsmart.upload.Request req = su.getRequest();
 		
-		String sender=null;
-		String receiver=null; 
-        String sendtime=null;
-        String subject=null;
-        String body=null; 
-        String revdata=null;
-        
-		try 
-		{
-			su.upload();
-			revdata=req.getParameter("DATA");
-	        System.out.println(revdata);
-	        JSONObject obj = new JSONObject(revdata);
-	        sender=(String) obj.get("sender");
-	        receiver=(String) obj.get("receiver"); 
-	        sendtime=(String) obj.get("sendtime");
-	        subject=(String) obj.get("subject");
-	        body=(String) obj.get("body");   
-	       
-			int count=su.save(realPath);
-			for(int i=0;i<su.getFiles().getCount();i++)
-			{
-				com.jspsmart.upload.File tempFile=su.getFiles().getFile(i);
-				System.out.println(realPath+"\\"+tempFile.getFileName());
-				attachTemp.add(realPath+"\\"+tempFile.getFileName());
-			}
-			System.out.println("count:"+count);
-		} 
-		catch (SmartUploadException e) {
-			e.printStackTrace();
-		}
-        
-        
 		EmailInput email=new EmailInput();
 		BotResult botResult=new BotResult();
 		String Raw_filename="D:\\iBotest\\bizplan1.txt";
 		String Abstract_filename="D:\\iBotest\\abstract.txt";
 		
+		String sender=null;
+		String receiver=null; 
+        String sendtime=null;
+        String subject=null;
+        String body=null;         
+        ArrayList<String> attachTemp = new ArrayList<String> ();
+         
+		if(request.getHeader("Content-Type").indexOf("multipart/form-data")!=-1)
+		{
+			
+	        String realPath = getServletContext().getRealPath("/") + "RecFile";
+			System.out.println(realPath);
+			File fileupload = new File(realPath);
+			if(!fileupload.exists()){
+				fileupload.mkdir();
+			}
+			SmartUpload su=new SmartUpload();
+			su.initialize(getServletConfig(), request, response);
+			com.jspsmart.upload.Request req = su.getRequest();
+			JSONObject obj = null;
+			String revdata=null;
+			try 
+			{
+				su.upload();
+				try
+				{
+					revdata=req.getParameter("DATA");				
+			        System.out.println(revdata);
+			        obj = new JSONObject(revdata);
+			        sender=obj.getString("sender");
+			        receiver=obj.getString("receiver"); 
+			        sendtime=obj.getString("sendtime");
+			        subject=obj.getString("subject");
+			        body=obj.getString("body");   
+				}catch(JSONException e)
+				{
+					e.printStackTrace();
+				}
+				int count=su.save(realPath);
+				for(int i=0;i<su.getFiles().getCount();i++)
+				{
+					com.jspsmart.upload.File tempFile=su.getFiles().getFile(i);
+					System.out.println(realPath+"\\"+tempFile.getFileName());
+					attachTemp.add(realPath+"\\"+tempFile.getFileName());
+				}
+				System.out.println("count:"+count);
+			} 
+			catch (SmartUploadException e) {
+				e.printStackTrace();
+			}				        
+		}
+		
+		else if(request.getHeader("Content-Type").indexOf("application/json")!=-1)
+		{
+			    String json = readJSONString(request);	
+			    System.out.println(json);
+		        JSONObject jsonObject = null;
+		        try {
+		            jsonObject = new JSONObject(json);
+		            sender=jsonObject.getString("sender");
+		            receiver=jsonObject.getString("receiver"); 
+			        sendtime=jsonObject.getString("sendtime");
+			        subject=jsonObject.getString("subject");
+			        body=jsonObject.getString("body");   
+		        }
+		        catch (JSONException e) {
+		            e.printStackTrace();
+		        }
+		}
+				
 		email.setSender(sender);
 		email.setReceiver(receiver);
 		email.setSendTime(sendtime);
@@ -116,7 +146,7 @@ public class GetInfo extends HttpServlet {
 		email.setEmailBody(body);
 		email.setEmailAttach(attachTemp);
 		
-		MailTxtInput(Raw_filename,email);		
+		MailTxtInput(Raw_filename,email);
 		
 		Txt2Abstract(Raw_filename,Abstract_filename);		
 
@@ -124,7 +154,21 @@ public class GetInfo extends HttpServlet {
 		
 		iBotOutput(botResult,response);
 	}
-	
+	public String readJSONString(HttpServletRequest request)
+	{
+        StringBuffer json = new StringBuffer();
+        String line = null;
+        try {
+            BufferedReader reader = request.getReader();
+            while((line = reader.readLine()) != null) {
+                json.append(line);
+            }
+        }
+        catch(Exception e) {
+            System.out.println(e.toString());
+        }
+        return json.toString();
+    }
 	public void MailTxtInput(String fileName,EmailInput email)
 	{
 		String sendInfo=email.getSender();
@@ -135,7 +179,7 @@ public class GetInfo extends HttpServlet {
 		ArrayList<String> appendInfo = email.getEmailAttach();
 		Tika tika = new Tika();
 		String text = "";
-		if(appendInfo.get(0).equals("null"))
+		if(appendInfo.isEmpty())
 		{
 			text="您没有指定任何附件";
 			System.out.println(text);
