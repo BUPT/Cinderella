@@ -111,7 +111,7 @@ POST
 {"city":"北京","startup":"农夫之家","company":"北京市农业科技有限公司","founders":["张三","李四","王五"],"money":30000,"equity":"20%","industries":["农业","科技"]}
 ##### curl示例
 ######有附件上传
-	curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\test.ppt -F uploadFiles=@D:\ibotest\test.doc -F sender="346786495@qq.com" -F receiver="wnbupt@qq.com" -F sendtime="2015-12-16 10:43" -F subject="测试demo" -F body="快塞给我一封邮件吧！" http://localhost:8080/IbotInfo/GetInfo
+	curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\test.ppt -F uploadFiles=@D:\ibotest\test.doc -F 'sender=346786495@qq.com' -F 'receiver=wnbupt@qq.com' -F 'sendtime=2015-12-16 10:43' -F 'subject=测试demo' -F 'body=快塞给我一封邮件吧' http://localhost:8080/IbotInfo/GetInfo
 ######无附件上传
 	curl -H "Content-Type:application/json" -X POST -d {"sender":"346786495@qq.com","receiver":"wnbupt@qq.com","sendtime":"2015-12-16 10:43","subject":"测试demo","body":"快塞给我一封邮件吧！"} http://localhost:8080/IbotInfo/GetInfo
 ##### curl返回示例	
