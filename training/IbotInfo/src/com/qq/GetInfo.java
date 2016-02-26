@@ -95,15 +95,13 @@ public class GetInfo extends HttpServlet {
 				su.upload();
 				try
 				{
-					revdata=req.getParameter("DATA");				
-			        System.out.println(revdata);
-			        obj = new JSONObject(revdata);
-			        sender=obj.getString("sender");
-			        receiver=obj.getString("receiver"); 
-			        sendtime=obj.getString("sendtime");
-			        subject=obj.getString("subject");
-			        body=obj.getString("body");   
-				}catch(JSONException e)
+					sender=req.getParameter("sender");
+			        receiver=req.getParameter("receiver"); 
+			        sendtime=req.getParameter("sendtime");
+			        subject=req.getParameter("subject");
+			        body=req.getParameter("body");   			        
+				}
+				catch(JSONException e)
 				{
 					e.printStackTrace();
 				}
@@ -124,6 +122,7 @@ public class GetInfo extends HttpServlet {
 		else if(request.getHeader("Content-Type").indexOf("application/json")!=-1)
 		{
 			    String json = readJSONString(request);	
+			    
 			    System.out.println(json);
 		        JSONObject jsonObject = null;
 		        try {
