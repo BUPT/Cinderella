@@ -4,26 +4,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
 
@@ -31,14 +19,12 @@ import com.jspsmart.upload.SmartUpload;
 import com.jspsmart.upload.SmartUploadException;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
-
-import net.sf.json.JSONArray;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
 import org.json.*;
-import org.json.JSONException;
+
+import com.mashape.unirest.http.HttpResponse;
 /**
  * Servlet implementation class GetInfo
  */
@@ -98,18 +84,11 @@ public class GetInfo extends HttpServlet {
 			try 
 			{
 				su.upload();
-				try
-				{
-					sender=req.getParameter("sender");
-			        receiver=req.getParameter("receiver"); 
-			        sendtime=req.getParameter("sendtime");
-			        subject=req.getParameter("subject");
-			        body=req.getParameter("body");   			        
-				}
-				catch(JSONException e)
-				{
-					e.printStackTrace();
-				}
+				sender=req.getParameter("sender");
+				receiver=req.getParameter("receiver"); 
+				sendtime=req.getParameter("sendtime");
+				subject=req.getParameter("subject");
+				body=req.getParameter("body");
 				int count=su.save(realPath);
 				for(int i=0;i<su.getFiles().getCount();i++)
 				{
@@ -134,7 +113,7 @@ public class GetInfo extends HttpServlet {
 		    
 		    System.out.println(json);
 		    
-	        JSONObject jsonObject = new JSONObject(json);  ;
+	        JSONObject jsonObject = null  ;
 	        try {
 	            jsonObject = new JSONObject(json);
 	            sender=jsonObject.getString("sender");
@@ -157,11 +136,26 @@ public class GetInfo extends HttpServlet {
 		
 		MailTxtInput(Raw_filename,email);
 		
-		Txt2Abstract(Raw_filename,Abstract_filename);		
-
-		botResult=Abstract2Meta(Abstract_filename);
+		try {
+			botResult=GetKeyPart(Raw_filename,botResult);
+		} catch (UnirestException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
-		iBotOutput(botResult,response);
+		try {
+			botResult=GetOtherPart(Raw_filename,botResult);
+		} catch (UnirestException | JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try {
+			iBotOutput(botResult,response);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	public String readJSONString(HttpServletRequest request)
 	{
@@ -246,95 +240,169 @@ public class GetInfo extends HttpServlet {
 		}			
 		
 	}
-	public void Txt2Abstract(String infileName,String outfilename) throws IOException 
+	public String Txt2Abstract(String infileName,String SENTIMENT_URL) throws IOException, UnirestException 
 	{
 		File file = new File(infileName);
-		String result = null;
+		String result = "";
 		if(file.isFile() && file.exists())
 		{ 
             InputStreamReader read = new InputStreamReader (new FileInputStream(file),"utf-8");
-            BufferedReader   in   =   new   BufferedReader(read);   
+            BufferedReader in = new  BufferedReader(read);   
             String line; 
             while((line = in.readLine())!=null) 
-            {  
-            	//System.out.println(line); 
+            {   
             	result += line;
             }    
             read.close();
         }
-     	
-		String SENTIMENT_URL="http://api.bosonnlp.com/ner/analysis";
-        //String body = new JSONArray(result).toString();
-//		JSONArray jsonStrs = new JSONArray();
-//		jsonStrs.add(0, );
-//		jsonStrs.add(1, );
-//		String body=jsonStrs.toString();
-//		System.out.println(body);
-//		HttpResponse<JsonNode> jsonResponse = Unirest.post(SENTIMENT_URL)
-//            .header("Accept", "application/json")
-//            .header("X-Token", "5mR6aTnx.4451.Gx2Jt_BBGdFE")
-//            .body(body)
-//            .asJson();
-//
-//        System.out.println(jsonResponse.getBody());
-//        Unirest.shutdown();	
-	}
-	public BotResult Abstract2Meta(String filename)
-	{
-		//关键属性获取模块
-		//输入为摘要存放地址，返回值为BotResult对象
 		
-		String location="北京";
+		String body = "[\""+result+"\"]";    
+		
+		//System.out.println("body:"+body);good!
+		
+		HttpResponse <JsonNode> jsonResponse = Unirest.post(SENTIMENT_URL)
+			.header("Content-Type", "application/json")
+            .header("Accept", "application/json")
+            .header("X-Token", "5mR6aTnx.4451.Gx2Jt_BBGdFE")
+            .body(body)
+            .asJson();
+		
+		String finalStr = new String(jsonResponse.getBody().toString().getBytes(),"UTF-8");		
+		System.out.println(finalStr);
+		
+		Unirest.shutdown();			
+        return finalStr;
+	}
+	/**
+	 * 
+	 * @param bot
+	 * @throws UnirestException 
+	 * @throws IOException 
+	 */
+	public  BotResult GetKeyPart(String infileName,BotResult bot) throws IOException, UnirestException
+	{
+		String SENTIMENT_URL="http://api.bosonnlp.com/keywords/analysis";
+		String AnalyseLine = Txt2Abstract(infileName,SENTIMENT_URL);
+		
+		AnalyseLine=AnalyseLine.replace("[","").replace("]","");	
+		String[] all=AnalyseLine.split(",");
+		
+		ArrayList<String> bizArea=new ArrayList<String> ();
+		if(all.length>=4)
+		{
+			bizArea.add(all[1].replace("\"", ""));
+			bizArea.add(all[3].replace("\"", ""));
+		}
+		else if(all.length>=2&&all.length<4)
+		{
+			bizArea.add(all[1].replace("\"", ""));
+		}
+		else
+		{
+			bizArea.add("null");
+		}
+		bot.setBizArea(bizArea);
+		return bot;
+				
+	}
+	public BotResult GetOtherPart(String infileName,BotResult bot) throws IOException, UnirestException, JSONException
+	{
+		String SENTIMENT_URL="http://api.bosonnlp.com/ner/analysis";
+		String AnalyseLine = Txt2Abstract(infileName,SENTIMENT_URL);
+		
+		JSONArray jsonArray = new JSONArray(AnalyseLine);
+		int iSize = jsonArray.length();
+		String entity=null;
+		String word=null;
+		
+		for (int i = 0; i < iSize; i++) 
+		{
+			JSONObject jsonObj = jsonArray.getJSONObject(i);
+			word = jsonObj.get("word").toString();
+			entity = jsonObj.get("entity").toString();
+		}
+		
+		entity = entity.replace("[", "").replace("]", "").replace("\"", "");
+		String[] all_entity = entity.split(",");
+		
+		
+		word = word.replace("[", "").replace("]", "").replace("\"", "");
+		String[] all_word = word.split(",");
+		for(String tryword : all_word)
+		{
+			System.out.println(tryword);
+		}	
+		
+		int locationFlag=0,pnameFlag=0,cnameFlag=0,pronameFlag=0;
+		int temp=0;
+		ArrayList<String> founderName=new ArrayList<String> ();
+		
+		for(int i=0;i<all_entity.length;i++)
+		{
+			if(all_entity[i].equals("location")&&locationFlag==0)
+			{
+				locationFlag=1;
+				temp= Integer.parseInt(all_entity[i-2]);
+				bot.setLocation(all_word[temp]);
+			}
+			else if(all_entity[i].equals("person_name"))
+			{
+				int j=0;
+				temp= Integer.parseInt(all_entity[i-2]);
+				founderName.add(all_word[temp]);	
+			}
+			else if(all_entity[i].equals("company_name")&&cnameFlag==0)
+			{
+				cnameFlag=1;
+				temp= Integer.parseInt(all_entity[i-2]);
+				bot.setCompanyName(all_word[temp]);
+			}
+			else if(all_entity[i].equals("product_name")&&pronameFlag==0)
+			{
+				pronameFlag=1;
+				temp= Integer.parseInt(all_entity[i-2]);
+				bot.setProjectName(all_word[temp]);
+			}
+			
+		}
+		
 		int financeLimit=30000;
 		String tranStock="20%";
-		String projectName="农夫之家";
-		String companyName="北京市农业科技有限公司";
-		String[] founder={"张三","李四","王五"};
-		String[] area={"农业","科技"};
-		ArrayList<String> founderName=new ArrayList<String> ();
-		ArrayList<String> bizArea=new ArrayList<String> ();
-		
-		BotResult bot=new BotResult();
-		bot.setLocation(location);
+		bot.setFounderName(founderName);
 		bot.setFinanceLimit(financeLimit);
 		bot.setTranStock(tranStock);
-		bot.setProjectName(projectName);
-		bot.setCompanyName(companyName);
-		for(int i=0;i<founder.length;i++)
-		{
-			founderName.add(founder[i]);
-		}
-		for(int i=0;i<area.length;i++)
-		{
-			bizArea.add(area[i]);
-		}
-		bot.setFounderName(founderName);
-		bot.setBizArea(bizArea);
-		
 		return bot;
 	}
-	public void iBotOutput(BotResult bot,HttpServletResponse response)
+	
+	public void iBotOutput(BotResult bot,HttpServletResponse response) throws JSONException
 	{
-		response.reset();
-		response.setCharacterEncoding("UTF-8");
-		response.setContentType("text/json; charset=UTF-8"); 
-		JSONStringer stringer = new JSONStringer();  
-
 		try {
-			 stringer.object().key("city").value(bot.getLocation()).  
-		        key("startup").value(bot.getProjectName()).  
-		        key("company").value(bot.getCompanyName()).  
-		        key("founders").value(bot.getFounderName()).
-		        key("money").value(bot.getFinanceLimit()).
-		        key("equity").value(bot.getTranStock()).
-		        key("industries").value(bot.getBizArea()).endObject(); 
-				System.out.println("---------------输出ing---------------------");
-			response.getOutputStream().write(stringer.toString().getBytes("UTF-8"));  			
-		} 
-		catch (IOException e) {
+		
+			response.reset();
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("text/json; charset=UTF-8"); 
+			JSONStringer stringer = new JSONStringer();  
+
+			try {
+				 stringer.object().key("city").value(bot.getLocation()).  
+			        key("startup").value(bot.getProjectName()).  
+			        key("company").value(bot.getCompanyName()).  
+			        key("founders").value(bot.getFounderName()).
+			        key("money").value(bot.getFinanceLimit()).
+			        key("equity").value(bot.getTranStock()).
+			        key("industries").value(bot.getBizArea()).endObject(); 
+					System.out.println("---------------输出ing---------------------");
+				response.getOutputStream().write(stringer.toString().getBytes("UTF-8"));  			
+			} 
+			catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
 
+	}
 }
