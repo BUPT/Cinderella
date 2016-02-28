@@ -2,8 +2,11 @@ package com.qq;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.URL;
@@ -16,24 +19,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
-import org.json.JSONObject;
-import org.json.JSONStringer;
-import org.json.JSONObject; 
+
 import com.jspsmart.upload.SmartUpload;
 import com.jspsmart.upload.SmartUploadException;
-import org.json.*;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+
 import net.sf.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
-
+import org.json.*;
+import org.json.JSONException;
 /**
  * Servlet implementation class GetInfo
  */
@@ -121,21 +126,26 @@ public class GetInfo extends HttpServlet {
 		
 		else if(request.getHeader("Content-Type").indexOf("application/json")!=-1)
 		{
-			    String json = readJSONString(request);	
-			    
-			    System.out.println(json);
-		        JSONObject jsonObject = null;
-		        try {
-		            jsonObject = new JSONObject(json);
-		            sender=jsonObject.getString("sender");
-		            receiver=jsonObject.getString("receiver"); 
-			        sendtime=jsonObject.getString("sendtime");
-			        subject=jsonObject.getString("subject");
-			        body=jsonObject.getString("body");   
-		        }
-		        catch (JSONException e) {
-		            e.printStackTrace();
-		        }
+			
+			//String json = IOUtils.toString(request.getInputStream());
+			
+			//json=json.substring(1, json.length()-1);
+		    String json = readJSONString(request);	
+		    
+		    System.out.println(json);
+		    
+	        JSONObject jsonObject = new JSONObject(json);  ;
+	        try {
+	            jsonObject = new JSONObject(json);
+	            sender=jsonObject.getString("sender");
+	            receiver=jsonObject.getString("receiver"); 
+		        sendtime=jsonObject.getString("sendtime");
+		        subject=jsonObject.getString("subject");
+		        body=jsonObject.getString("body");   
+	        }
+	        catch (JSONException e) {
+	            e.printStackTrace();
+	        }
 		}
 				
 		email.setSender(sender);
@@ -236,10 +246,38 @@ public class GetInfo extends HttpServlet {
 		}			
 		
 	}
-	public void Txt2Abstract(String infileName,String outfilename) 
+	public void Txt2Abstract(String infileName,String outfilename) throws IOException 
 	{
-		//摘要获取模块
-		//输入为txt语料地址和摘要存储地址，无返回值
+		File file = new File(infileName);
+		String result = null;
+		if(file.isFile() && file.exists())
+		{ 
+            InputStreamReader read = new InputStreamReader (new FileInputStream(file),"utf-8");
+            BufferedReader   in   =   new   BufferedReader(read);   
+            String line; 
+            while((line = in.readLine())!=null) 
+            {  
+            	//System.out.println(line); 
+            	result += line;
+            }    
+            read.close();
+        }
+     	
+		String SENTIMENT_URL="http://api.bosonnlp.com/ner/analysis";
+        //String body = new JSONArray(result).toString();
+//		JSONArray jsonStrs = new JSONArray();
+//		jsonStrs.add(0, );
+//		jsonStrs.add(1, );
+//		String body=jsonStrs.toString();
+//		System.out.println(body);
+//		HttpResponse<JsonNode> jsonResponse = Unirest.post(SENTIMENT_URL)
+//            .header("Accept", "application/json")
+//            .header("X-Token", "5mR6aTnx.4451.Gx2Jt_BBGdFE")
+//            .body(body)
+//            .asJson();
+//
+//        System.out.println(jsonResponse.getBody());
+//        Unirest.shutdown();	
 	}
 	public BotResult Abstract2Meta(String filename)
 	{
