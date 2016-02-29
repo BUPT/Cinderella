@@ -132,7 +132,7 @@ public class IbotInfo extends HttpServlet {
 		    {
 		    	subject = json.substring(j4+8, j5-1);
 		    }
-		    body = json.substring(j5+5,json.length()-1);
+		    body = json.substring(j5+5,json.length()-2);
 		}
 				
 		email.setSender(sender);
