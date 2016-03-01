@@ -23,14 +23,14 @@ POST
       <td>sender</td>
       <td>String</td>
       <td>是</td>
-      <td>346786495@qq.com</td>
+      <td>Betty Wang <wnbupt0916@gmail.com></td>
       <td>发送邮箱的地址</td>
    </tr>
    <tr>
       <td>receiver</td>
       <td>String</td>
       <td>是</td>
-      <td>wnbupt@qq.com</td>
+      <td>bp <bp@pre-angel.com></td>
       <td>接收邮箱的地址</td>
    </tr>
    <tr>
@@ -44,14 +44,14 @@ POST
       <td>subject</td>
       <td>String</td>
       <td>是</td>
-      <td>测试demo</td>
+      <td>全球领先的采购批发平台——阿里巴巴</td>
       <td>邮件主题</td>
    </tr>
    <tr>
       <td>body</td>
       <td>String</td>
       <td>是</td>
-      <td>快塞给我一封邮件吧！</td>
+      <td>阿里巴巴集团是以马云为首的18人，于1999年在中国杭州创立，阿里巴巴(1688.com)是全球企业间(B2B)电子商务的著名品牌,为数千万网商提供海量商机信息和便捷安全的在线交易市场,也是商人们以商会友、真实互动的社区平台。</td>
       <td>邮件正文</td>
    </tr>
    <tr>
@@ -109,7 +109,7 @@ POST
 
 ##### curl示例
 ######有附件上传
-	curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\test_email.pdf -F "sender=Betty Wang<wnbupt0916@gmail.com>" -F "receiver=bp <bp@pre-angel.com>" -F "sendtime=2015-12-16 10:43" -F "subject=垃圾分类信息化社区平台" -F "body=您好，谢谢您的帮助与支持！" http://111.207.243.70:8838/SimpleRobot/GetInfo
+	curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\test.ppt uploadFiles=@D:\ibotest\test.doc -F "sender=Betty Wang <wnbupt0916@gmail.com>" -F "receiver=bp <bp@pre-angel.com>" -F "sendtime=2015-12-16 10:43" -F "subject=全球领先的采购批发平台———阿里巴巴" -F "body=阿里巴巴集团是以马云为首的18人，于1999年在中国杭州创立，阿里巴巴(1688.com)是全球企业间(B2B)电子商务的著名品牌,为数千万网商提供海量商机信息和便捷安全的在线交易市场,也是商人们以商会友、真实互动的社区平台。" http://111.207.243.70:8838/SimpleRobot/GetInfo
 	
 ##### 返回示例	
 	{
@@ -134,21 +134,21 @@ POST
 	curl -H "Content-Type:application/json" -X POST -d '{"sender":"Betty Wang<wnbupt0916@gmail.com>","receiver":"bp <bp@pre-angel.com>","sendtime":"2015-12-16 10:43","subject":"全球领先的采购批发平台","body":"阿里巴巴集团是以马云为首的18人，于1999年在中国杭州创立，阿里巴巴(1688.com)是全球企业间(B2B)电子商务的著名品牌,为数千万网商提供海量商机信息和便捷安全的在线交易市场,也是商人们以商会友、真实互动的社区平台。"}' http://111.207.243.70:8838/SimpleRobot/GetInfo 
 
 ##### 返回示例	
-{
-    "city": "中国",
-    "startup": "Betty",
-    "company": "阿里巴巴",
-    "founders": [
-        "@",
-        "马云"
-    ],
-    "money": 30000,
-    "equity": "20%",
-    "industries": [
-        "附件",
-        "发件人"
-    ]
-}
+	{
+	    "city": "中国",
+	    "startup": "Betty",
+	    "company": "阿里巴巴",
+	    "founders": [
+	        "@",
+	        "马云"
+	    ],
+	    "money": 30000,
+	    "equity": "20%",
+	    "industries": [
+	        "附件",
+	        "发件人"
+	    ]
+	}
 
 
 
