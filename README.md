@@ -58,7 +58,7 @@ POST
       <td>uploadFiles</td>
       <td>String数组</td>
       <td>是</td>
-      <td>{"D:\\ibotest\\test.ppt","D:\\ibotest\\test.doc"}</td>
+      <td>{"D:\\ibotest\\test.doc"}</td>
       <td>附件在本地的路径，可以上传多个附件</td>
    </tr>
 </table>
@@ -109,26 +109,25 @@ POST
 
 ##### curl示例
 ######有附件上传
-	curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\test.ppt uploadFiles=@D:\ibotest\test.doc -F "sender=Betty Wang <wnbupt0916@gmail.com>" -F "receiver=bp <bp@pre-angel.com>" -F "sendtime=2015-12-16 10:43" -F "subject=全球领先的采购批发平台———阿里巴巴" -F "body=阿里巴巴集团是以马云为首的18人，于1999年在中国杭州创立，阿里巴巴(1688.com)是全球企业间(B2B)电子商务的著名品牌,为数千万网商提供海量商机信息和便捷安全的在线交易市场,也是商人们以商会友、真实互动的社区平台。" http://111.207.243.70:8838/SimpleRobot/GetInfo
+	curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\test.doc -F "sender=Betty Wang <wnbupt0916@gmail.com>" -F "receiver=bp <bp@pre-angel.com>" -F "sendtime=2015-12-16 10:43" -F "subject=全球领先的采购批发平台———阿里巴巴" -F "body=阿里巴巴集团是以马云为首的18人，于1999年在中国杭州创立，阿里巴巴(1688.com)是全球企业间(B2B)电子商务的著名品牌,为数千万网商提供海量商机信息和便捷安全的在线交易市场,也是商人们以商会友、真实互动的社区平台。" http://111.207.243.70:8838/SimpleRobot/GetInfo
 	
 ##### 返回示例	
 	{
-	    "city": "北京",
-	    "startup": "农夫之家",
-	    "company": "北京市农业科技有限公司",
+	    "city": "中国",
+	    "startup": "Betty",
+	    "company": "阿里巴巴网",
 	    "founders": [
-	        "张三",
-	        "李四",
-	        "王五"
+	        "@",
+	        "马云",
+	        "陆兆禧"
 	    ],
 	    "money": 30000,
 	    "equity": "20%",
 	    "industries": [
-	        "农业",
-	        "科技"
+	        "业务",
+	        "服务"
 	    ]
 	}
-
 
 ######无附件上传
 	curl -H "Content-Type:application/json" -X POST -d '{"sender":"Betty Wang<wnbupt0916@gmail.com>","receiver":"bp <bp@pre-angel.com>","sendtime":"2015-12-16 10:43","subject":"全球领先的采购批发平台","body":"阿里巴巴集团是以马云为首的18人，于1999年在中国杭州创立，阿里巴巴(1688.com)是全球企业间(B2B)电子商务的著名品牌,为数千万网商提供海量商机信息和便捷安全的在线交易市场,也是商人们以商会友、真实互动的社区平台。"}' http://111.207.243.70:8838/SimpleRobot/GetInfo 
