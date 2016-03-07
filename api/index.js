@@ -1,18 +1,33 @@
-// grab the packages we need
+/**
+ * Module dependencies.
+ */
 var express = require('express');
+var routes = require('../material/All2Txt');
+var http = require('http');
+var path = require('path');
 var app = express();
-var port = process.env.PORT || 8080;
 
-// routes will go here
+// all environments参数设置
+app.set('port', process.env.PORT || 8080);
+app.use(express.favicon());
+app.use(express.logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded());
+app.use(express.methodOverride());
+app.use(app.router);
 
-// routes will go here
-app.get('/api/ibot', function(req, res) {
-  var id = req.param('id');
-  var geo = req.param('geo');  
+//app.configure(function () {
+//  app.use(express.bodyParser({ keepExtensions: true, uploadDir: '/tmp' }));
+//});
 
-  res.send(id + ' ' + geo);
+// development only app.use启用大量的中间件
+if ('development' == app.get('env')) {
+  app.use(express.errorHandler());
+}
+//是一个路由控制器
+//app.get('/', routes.index);
+app.post('/ibot', routes.getInfo);
+
+http.createServer(app).listen(app.get('port'), function(){
+  console.log('Express server listening on port ' + app.get('port'));
 });
-
-// start the server
-app.listen(port);
-console.log('Server started! At http://localhost:' + port);
