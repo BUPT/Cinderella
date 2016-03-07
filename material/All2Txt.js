@@ -3,7 +3,6 @@
  */
 var fs = require("fs");
 var util = require("util");
-var iconv = require("iconv-lite");
 var Txt2Meta = require("../training/txt2meta");
 
 exports.getInfo = function(req, res){
@@ -11,8 +10,8 @@ exports.getInfo = function(req, res){
     var sender = req.body.sender || 'none';
 	var receiver = req.body.receiver || 'none';
 	var sendtime = req.body.sendtime || 'none';
-	var subject = iconv.decode((req.body.subject),'utf-8') || 'none';
-	var body = iconv.decode((req.body.body),'gbk') || 'none';
+	var subject = req.body.subject || 'none';
+	var body = req.body.body || 'none';
 	
 	var data = "发件人:"+sender+'\n'+"收件人："+receiver+'\n'+"发件时间："+sendtime+'\n'+"邮件主题："+subject+'\n'+"邮件正文："+body+'\n';		
 	console.log(data);
