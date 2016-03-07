@@ -7,6 +7,7 @@ var Txt2Meta = require("../training/txt2meta");
 
 exports.getInfo = function(req, res){
    
+    console.log(req.body);
     var sender = req.body.sender || 'none';
 	var receiver = req.body.receiver || 'none';
 	var sendtime = req.body.sendtime || 'none';
