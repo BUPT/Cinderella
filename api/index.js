@@ -15,10 +15,8 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(app.router);
+app.use(express.bodyParser());
 
-//app.configure(function () {
-//  app.use(express.bodyParser({ keepExtensions: true, uploadDir: '/tmp' }));
-//});
 
 // development only app.use启用大量的中间件
 if ('development' == app.get('env')) {
