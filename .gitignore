@@ -39,4 +39,5 @@ node_modules
 .project
 
 # uploadFiles directory
-uploadFiles
+materail/uploadFile
+materail/uploadFile/
