@@ -55,5 +55,7 @@ function DealMultiData(req,res)
 		var data = "发件人:"+sender+'\n'+"收件人："+receiver+'\n'+"发件时间："+sendtime+'\n'+"邮件主题："+subject+'\n'+"邮件正文："+body+'\n';			
 		console.log(data);
 //		Txt2Meta.txt2Meta(data, res);
+		res.writeHead(200, {'content-type': 'text/html'});
+  		res.end("hello!");
   	}); 
 };
