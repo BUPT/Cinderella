@@ -11,6 +11,7 @@ exports.txt2Meta = function(data, res){
 	var equity = "20%";
 	var industries = new Array();
 	
+	console.log(data);
 //	var key = '5mR6aTnx.4451.Gx2Jt_BBGdFE';
 //	var nlp = new bosonnlp.BosonNLP(key);
 //	nlp.ner('成都商报记者 姚永忠', function (result) {
