@@ -6,7 +6,8 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "express": "3.5.0",
-    "bosonnlp": "0.0.9"
+    "async": "^2.0.0-rc.1",
+    "bosonnlp": "0.0.9",
+    "express": "3.5.0"
   }
 }
