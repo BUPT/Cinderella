@@ -3,7 +3,6 @@
  */
 var express = require('express');
 var routes = require('../material/All2Txt');
-var test = require('../material/test');
 var http = require('http');
 var path = require('path');
 var app = express();
@@ -26,7 +25,6 @@ if ('development' == app.get('env')) {
 //是一个路由控制器
 //app.get('/', routes.index);
 app.post('/ibot', routes.getInfo);
-app.post('/test', test.sendPost);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
