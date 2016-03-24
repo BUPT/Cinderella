@@ -2,7 +2,7 @@ var fs = require("fs");
 var util = require('util');
 var bosonnlp = require('bosonnlp');
 
-exports.txt2Meta = function(data, res){
+exports.txt2Meta = function(filename, res){
 	var city = "none";
 	var startup = "none";
 	var company = "none";
@@ -10,8 +10,14 @@ exports.txt2Meta = function(data, res){
 	var	money = 30000;
 	var equity = "20%";
 	var industries = new Array();
+
+	var data = fs.readFileSync(filename);
+	console.log("同步读取: " + data.toString());
 	
-	console.log("meta"+data);
+	
+	
+	res.writeHead(200, {'content-type': 'text/html'});
+	res.end("hello!");
 //	var key = '5mR6aTnx.4451.Gx2Jt_BBGdFE';
 //	var nlp = new bosonnlp.BosonNLP(key);
 //	nlp.ner('成都商报记者 姚永忠', function (result) {
@@ -67,8 +73,6 @@ exports.txt2Meta = function(data, res){
 		"industries":"[农业,科技]"
 	};
 	
-	//		res.writeHead(200, {'content-type': 'text/html'});
-//		res.end("hello!");
 //	res.send(util.inspect(metaResult));
 //	res.send("hello");
 }

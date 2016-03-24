@@ -41,7 +41,7 @@ function DealMultiData(req,res)
     form.on('error', function(err) {
     	console.log(err);
 	});
-	
+	var filename = '../material/output.txt';
 	form.parse(req,function(err, fields, files) {
 		var sender = fields.sender || 'none';
 		var receiver = fields.receiver || 'none';
@@ -49,17 +49,28 @@ function DealMultiData(req,res)
 		var subject = fields.subject || 'none';
 		var body = fields.body || 'none';			
 		var allData = "发件人:"+sender+'\n'+"收件人："+receiver+'\n'+"发件时间："+sendtime+'\n'+"邮件主题："+subject+'\n'+"邮件正文："+body+'\n';					
+		
+		
+	 	var writerStream = fs.createWriteStream(filename);// 创建一个可以写入的流，写入到文件 output.txt 中
+	 	writerStream.write(allData,'UTF8');
+	 	writerStream.end();
+	 	writerStream.on('finish', function() {
+	 	    console.log("写入完成。");
+	 	});	
+	 	writerStream.on('error', function(err){
+	 	   console.log(err.stack);
+	 	});	
+	 	console.log("程序执行完毕");
+				
 		var fileSum = getStrCount(util.inspect(files),"fileUpload");
-		var count = 0
+		var count = 1;
 		for(var i=1 ;i<=fileSum ;i++) {
 			var fileNum = 'fileUpload' + i;
 			fs.rename(files[fileNum].path, form.uploadDir + files[fileNum].name);
-			allData = allData + sendPost(form.uploadDir + files[fileNum].name,files[fileNum].type,allData);
-		}		
-		console.log("main:"+allData);
+			sendPost(form.uploadDir + files[fileNum].name,files[fileNum].type,allData);
+		}				
 	});
-	res.writeHead(200, {'content-type': 'text/html'});
-	res.end("hello!");
+	Txt2Meta.txt2Meta(filename, res);	
 };
 function sendPost(fileName,fileType,allData)
 {	
@@ -70,12 +81,19 @@ function sendPost(fileName,fileType,allData)
 	  extract_text:'true',
 	  extract_xmlattributes:'false'
 	};
-			
+		
 	needle.post('https://api.havenondemand.com/1/api/sync/extracttext/v1', datatosend, { multipart: true }, function(err, resp, body){
 		if (!err && resp.statusCode == 200)
-	    allData = allData + resp.body.document[0].content;
-	    console.log("sendpost:"+allData);
-		return allData;
+		{
+			var filename = '../material/output.txt';			
+			fs.appendFile(filename,resp.body.document[0].content,'utf8',function(err){  
+			    if(err)  
+			    {  
+			        console.log(err);  
+			    }  
+			});  
+		 	console.log("程序执行完毕");
+		}	    
 	});	
 }
 
