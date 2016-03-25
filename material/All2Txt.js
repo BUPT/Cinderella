@@ -1,12 +1,10 @@
 /*
  * Put request data into object
  */
-var fs = require("fs");
 var util = require("util");
 var Txt2Meta = require("../training/txt2meta");
+var GetAttach = require('./Attach2Txt');
 var formidable = require('formidable');
-var needle = require('needle');
-
 
 exports.getInfo = function(req, res){    
     var contentType = req.get('Content-Type');    	
@@ -38,72 +36,19 @@ function DealMultiData(req,res)
     form.keepExtensions = true; 
     form.maxFieldsSize = 2 * 1024 * 1024;
    
-    form.on('error', function(err) {
-    	console.log(err);
-	});
-	var filename = '../material/output.txt';
-	form.parse(req,function(err, fields, files) {
+   	form.parse(req,function(err, fields, files) {
 		var sender = fields.sender || 'none';
 		var receiver = fields.receiver || 'none';
 		var sendtime = fields.sendtime || 'none';
 		var subject = fields.subject || 'none';
 		var body = fields.body || 'none';			
-		var allData = "发件人:"+sender+'\n'+"收件人："+receiver+'\n'+"发件时间："+sendtime+'\n'+"邮件主题："+subject+'\n'+"邮件正文："+body+'\n';					
-		
-		
-	 	var writerStream = fs.createWriteStream(filename);// 创建一个可以写入的流，写入到文件 output.txt 中
-	 	writerStream.write(allData,'UTF8');
-	 	writerStream.end();
-	 	writerStream.on('finish', function() {
-	 	    console.log("写入完成。");
-	 	});	
-	 	writerStream.on('error', function(err){
-	 	   console.log(err.stack);
-	 	});	
-	 	console.log("程序执行完毕");
-				
-		var fileSum = getStrCount(util.inspect(files),"fileUpload");
-		var count = 1;
-		for(var i=1 ;i<=fileSum ;i++) {
-			var fileNum = 'fileUpload' + i;
-			fs.rename(files[fileNum].path, form.uploadDir + files[fileNum].name);
-			sendPost(form.uploadDir + files[fileNum].name,files[fileNum].type,allData);
-		}				
-	});
-	Txt2Meta.txt2Meta(filename, res);	
-};
-function sendPost(fileName,fileType,allData)
-{	
-	var datatosend = {
-	  file:{file:fileName, content_type:fileType},
-	  apikey:'c173872b-5938-457f-9083-332c418ccf25',
-	  extract_metadata:'false',
-	  extract_text:'true',
-	  extract_xmlattributes:'false'
-	};
-		
-	needle.post('https://api.havenondemand.com/1/api/sync/extracttext/v1', datatosend, { multipart: true }, function(err, resp, body){
-		if (!err && resp.statusCode == 200)
-		{
-			var filename = '../material/output.txt';			
-			fs.appendFile(filename,resp.body.document[0].content,'utf8',function(err){  
-			    if(err)  
-			    {  
-			        console.log(err);  
-			    }  
-			});  
-		 	console.log("程序执行完毕");
-		}	    
+		var allData = "发件人:"+sender+'\n'+"收件人："+receiver+'\n'+"发件时间："+sendtime+'\n'+"邮件主题："+subject+'\n'+"邮件正文："+body+'\n';							
+		GetAttach.getAttachTxt(files,form.uploadDir,allData,function(data){
+			Txt2Meta.txt2Meta(data,res);
+		});		
 	});	
-}
-
-function getStrCount(scrstr,armstr)
-{
-	 var count=0;
-	 while(scrstr.indexOf(armstr) >=1 )
-	 {
-	    scrstr = scrstr.replace(armstr,"")
-	    count++;    
-	 }
-	 return count;
+	form.on('error', function(err) {
+    	console.log(err);
+	});
 };
+
