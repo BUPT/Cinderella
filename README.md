@@ -5,7 +5,7 @@ a bot that helps people to summary document in different way.
 ##### 版本
 0.1.0
 ##### 访问地址
-http://111.207.243.70:8838/SimpleRobot/GetInfo
+http://111.207.243.70:8838/IbotNLP/GetInfo
 
 ##### 访问方式  
 POST
