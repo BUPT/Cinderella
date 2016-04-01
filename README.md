@@ -58,7 +58,7 @@ POST
       <td>uploadFiles</td>
       <td>String数组</td>
       <td>是</td>
-      <td>{"D:\\ibotest\\还你我一片绿色商业计划书.doc"}</td>
+      <td>{"D:\\ibotest\\还你我一片绿色商业计划书.pdf"}</td>
       <td>附件在本地的路径，可以上传多个附件</td>
    </tr>
 </table>
@@ -109,7 +109,7 @@ POST
 
 ##### curl示例
 ######有附件上传
-	curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\test.doc -F "sender=Betty Wang <wnbupt0916@gmail.com>" -F "receiver=bp <bp@pre-angel.com>" -F "sendtime=2015-12-16 10:43" -F "subject=还你我一片绿色——项目融资需求" -F "body=您好，谢谢观看！有意请联系本人" http://111.207.243.70:8838/SimpleRobot/GetInfo
+	curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\还你我一片绿色商业计划书.pdf -F "sender=Betty Wang <wnbupt0916@gmail.com>" -F "receiver=bp <bp@pre-angel.com>" -F "sendtime=2015-12-16 10:43" -F "subject=还你我一片绿色——项目融资需求" -F "body=您好，谢谢观看！有意请联系本人" http://111.207.243.70:8838/SimpleRobot/GetInfo
 	
 ##### 返回示例	
 	{
