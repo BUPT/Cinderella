@@ -58,7 +58,7 @@ POST
       <td>uploadFiles</td>
       <td>String数组</td>
       <td>是</td>
-      <td>{"D:\\ibotest\\test.doc"}</td>
+      <td>{"D:\\ibotest\\还你我一片绿色商业计划书.doc"}</td>
       <td>附件在本地的路径，可以上传多个附件</td>
    </tr>
 </table>
@@ -92,12 +92,12 @@ POST
    </tr>
    <tr>
       <td>money</td>
-      <td>int</td>
+      <td>String</td>
       <td>公司需要资金支持的额度</td>
    </tr>
    <tr>
       <td>equity</td>
-      <td>string</td>
+      <td>String</td>
       <td>公司愿意付出的股权份额</td>
    </tr>
    <tr>
@@ -109,23 +109,31 @@ POST
 
 ##### curl示例
 ######有附件上传
-	curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\test.doc -F "sender=Betty Wang <wnbupt0916@gmail.com>" -F "receiver=bp <bp@pre-angel.com>" -F "sendtime=2015-12-16 10:43" -F "subject=全球领先的采购批发平台———阿里巴巴" -F "body=阿里巴巴集团是以马云为首的18人，于1999年在中国杭州创立，阿里巴巴(1688.com)是全球企业间(B2B)电子商务的著名品牌,为数千万网商提供海量商机信息和便捷安全的在线交易市场,也是商人们以商会友、真实互动的社区平台。" http://111.207.243.70:8838/SimpleRobot/GetInfo
+	curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\test.doc -F "sender=Betty Wang <wnbupt0916@gmail.com>" -F "receiver=bp <bp@pre-angel.com>" -F "sendtime=2015-12-16 10:43" -F "subject=还你我一片绿色——项目融资需求" -F "body=您好，谢谢观看！有意请联系本人" http://111.207.243.70:8838/SimpleRobot/GetInfo
 	
 ##### 返回示例	
 	{
-	    "city": "中国",
-	    "startup": "Betty",
-	    "company": "阿里巴巴网",
+	    "city": "none",
+	    "startup": "还你我一片绿色",
+	    "company": "none",
 	    "founders": [
-	        "@",
-	        "马云",
-	        "陆兆禧"
+	        "王永",
+		"北信科",
+		"王雁茂"
 	    ],
-	    "money": 30000,
-	    "equity": "20%",
+	    "money": "100万",
+	    "equity": "10%",
 	    "industries": [
-	        "业务",
-	        "服务"
+	       "废品",
+	       "废品交易",
+	       "循环经济",
+	       "垃圾减量补贴",
+	       "垃圾分类",
+	       "互联网+",
+	       "回收员",
+	       "积分商城",
+	       "互联网+环保",
+	       "分类"
 	    ]
 	}
 
@@ -134,18 +142,17 @@ POST
 
 ##### 返回示例	
 	{
-	    "city": "中国",
-	    "startup": "Betty",
-	    "company": "阿里巴巴",
+	    "city": "none",
+	    "startup": "none",
+	    "company": "none",
 	    "founders": [
-	        "@",
 	        "马云"
 	    ],
-	    "money": 30000,
-	    "equity": "20%",
+	    "money": "none",
+	    "equity": "none",
 	    "industries": [
-	        "附件",
-	        "发件人"
+	        "全球",
+	        "阿里巴巴"
 	    ]
 	}
 
