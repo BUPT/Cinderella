@@ -207,11 +207,11 @@ public class GetInfo extends HttpServlet {
 	
 	public void MailTxtInput(String fileName,EmailInput email) throws IOException, TikaException
 	{
-//		String sendInfo = email.getSender();
-//		String receiveInfo = email.getReceiver();
-//		String timeInfo = email.getSendTime();
-//		String subjectInfo = email.getEmailSubject();
-//		String bodyInfo = email.getEmailBody();
+		String sendInfo = email.getSender();
+		String receiveInfo = email.getReceiver();
+		String timeInfo = email.getSendTime();
+		String subjectInfo = email.getEmailSubject();
+		String bodyInfo = email.getEmailBody();
 		ArrayList<String> appendInfo = email.getEmailAttach();
 		Tika tika = new Tika();
 		String text = "";
@@ -235,6 +235,7 @@ public class GetInfo extends HttpServlet {
 				else
 				{
 					text = text+"附件:"+filename+"\r\n"+tika.parseToString(file);
+					file.delete();
 				}					
 			}
 		}
@@ -247,11 +248,11 @@ public class GetInfo extends HttpServlet {
 	    }
 	    FileOutputStream fw = new FileOutputStream(file.getAbsoluteFile());
 	    OutputStreamWriter bw = new OutputStreamWriter(fw, "UTF-8");
-//	    bw.write("发件人："+sendInfo+"\r\n");
-//	    bw.write("收件人："+receiveInfo+"\r\n"); 
-//	    bw.write("发件时间："+timeInfo+"\r\n");
-//	    bw.write("邮件主题："+subjectInfo+"\r\n");
-//	    bw.write("邮件正文："+bodyInfo+"\r\n");
+	    bw.write("发件人："+sendInfo+"\r\n");
+	    bw.write("收件人："+receiveInfo+"\r\n"); 
+	    bw.write("发件时间："+timeInfo+"\r\n");
+	    bw.write("邮件主题："+subjectInfo+"\r\n");
+	    bw.write("邮件正文："+bodyInfo+"\r\n");
 	    bw.write(text);
 	    bw.close();
 
@@ -302,8 +303,7 @@ public class GetInfo extends HttpServlet {
 			CLibrary.Instance.NLPIR_AddUserWord(".docx n");
 			
 			nativeBytes = CLibrary.Instance.NLPIR_ParagraphProcess(sInput, 1);
-//			System.out.println("分词结果为： " + nativeBytes);
-			
+	
 			ArrayList<String> allWords = new ArrayList<String> ();
 			ArrayList<String> allTags = new ArrayList<String> ();
 			String[] temp = nativeBytes.split(" ");
@@ -312,11 +312,7 @@ public class GetInfo extends HttpServlet {
 				String[] wordtemp = temp[i].split("/");
 				allWords.add(wordtemp[0]);
 				allTags.add(wordtemp[1]);
-			}
-////			Pattern pattern = Pattern.compile("b*g"); 
-////			System.out.println(pattern.matches(".*[融资|融].*", "融20百万"));  
-			
-			
+			}		
 			
 			bot.setFounderName(getFounders(allWords,allTags));
 			bot.setFinanceLimit(getMoney(allWords, allTags));
@@ -325,19 +321,6 @@ public class GetInfo extends HttpServlet {
 			bot.setLocation(getLocation(allWords, allTags));
 			bot.setProjectName(getProjectName(allWords, allTags));
 			bot.setBizArea(getBizArea(sInput));
-		
-//			nativeByte = CLibrary.Instance.NLPIR_GetFileKeyWords("D:\\NLPIR\\feedback\\huawei\\5341\\5341\\产经广场\\2012\\5\\16766.txt", 10,false);
-//			System.out.print("关键词提取结果是：" + nativeByte);
-
-//			System.out.println(allWords.toString());
-//			System.out.println("分词结果为： " + nativeBytes);			
-//			CLibrary.Instance.NLPIR_AddUserWord("华玉米的产地来源 n");
-//			nativeBytes = CLibrary.Instance.NLPIR_ParagraphProcess(sInput, 1);
-//			System.out.println("增加用户词典后分词结果为： " + nativeBytes);
-//			
-//			CLibrary.Instance.NLPIR_DelUsrWord("要求美方加强对输");
-//			nativeBytes = CLibrary.Instance.NLPIR_ParagraphProcess(sInput, 1);
-//			System.out.println("删除用户词典后分词结果为： " + nativeBytes);
 			
 			CLibrary.Instance.NLPIR_Exit();
 		} catch (Exception ex) {
