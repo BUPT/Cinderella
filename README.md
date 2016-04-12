@@ -1,6 +1,8 @@
 # Cinderella
 
-Cinderella(a woman whose merits were not been recognized but who then achieves sudden success and recognition) is a bot that does paper works in order to helps people to summary document in different way.
+Cinderella is a bot that does paper works in order to helps people to summary document in different way.
+
+`Cinderella - a woman whose merits were not been recognized but who then achieves sudden success and recognition`
 
 ##### 版本
 0.1.0
