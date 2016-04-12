@@ -111,7 +111,7 @@ POST
 
 ##### curl示例
 ######有附件上传
-	curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\还你我一片绿色商业计划书.pdf -F "sender=Betty Wang <wnbupt0916@gmail.com>" -F "receiver=bp <bp@pre-angel.com>" -F "sendtime=2015-12-16 10:43" -F "subject=还你我一片绿色——项目融资需求" -F "body=您好，谢谢观看！有意请联系本人" http://111.207.243.70:8838/SimpleRobot/GetInfo
+	curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\还你我一片绿色商业计划书.pdf -F "sender=Betty Wang <wnbupt0916@gmail.com>" -F "receiver=bp <bp@pre-angel.com>" -F "sendtime=2015-12-16 10:43" -F "subject=还你我一片绿色——项目融资需求" -F "body=您好，谢谢观看！有意请联系本人" http://111.207.243.70:8838/IbotNLP/GetInfo
 	
 ##### 返回示例	
 	{
@@ -140,7 +140,7 @@ POST
 	}
 
 ######无附件上传
-	curl -H "Content-Type:application/json" -X POST -d '{"sender":"Betty Wang<wnbupt0916@gmail.com>","receiver":"bp <bp@pre-angel.com>","sendtime":"2015-12-16 10:43","subject":"全球领先的采购批发平台","body":"阿里巴巴集团是以马云为首的18人，于1999年在中国杭州创立，阿里巴巴(1688.com)是全球企业间(B2B)电子商务的著名品牌,为数千万网商提供海量商机信息和便捷安全的在线交易市场,也是商人们以商会友、真实互动的社区平台。"}' http://111.207.243.70:8838/SimpleRobot/GetInfo 
+	curl -H "Content-Type:application/json" -X POST -d '{"sender":"Betty Wang<wnbupt0916@gmail.com>","receiver":"bp <bp@pre-angel.com>","sendtime":"2015-12-16 10:43","subject":"全球领先的采购批发平台","body":"阿里巴巴集团是以马云为首的18人，于1999年在中国杭州创立，阿里巴巴(1688.com)是全球企业间(B2B)电子商务的著名品牌,为数千万网商提供海量商机信息和便捷安全的在线交易市场,也是商人们以商会友、真实互动的社区平台。"}' http://111.207.243.70:8838/IbotNLP/GetInfo 
 
 ##### 返回示例	
 	{
