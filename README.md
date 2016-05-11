@@ -103,7 +103,7 @@ POST
       <td>公司愿意付出的股权份额</td>
    </tr>
    <tr>
-      <td>industries</td>
+      <td>industry</td>
       <td>String</td>
       <td>公司所属领域</td>
    </tr>
@@ -121,9 +121,9 @@ POST
 	    "founders": [
 	    	"果上",
 	        "王永刚",
-		"王雁茂",
-		"兰亚军",
-		"葛新权"
+	        "王雁茂",
+	        "兰亚军",
+	        "葛新权"
 	    ],
 	    "money": "100万",
 	    "equity": "10%",
