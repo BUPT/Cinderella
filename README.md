@@ -7,7 +7,7 @@ Cinderella is a bot that does paper works in order to helps people to summary do
 ##### 版本
 0.1.0
 ##### 访问地址
-http://111.207.243.70:8838/IbotNLP/GetInfo
+http://111.207.243.70:8838/Cinderella/GetInfo
 
 ##### 访问方式  
 POST
@@ -104,58 +104,46 @@ POST
    </tr>
    <tr>
       <td>industries</td>
-      <td>String数组</td>
+      <td>String</td>
       <td>公司所属领域</td>
    </tr>
 </table>
 
 ##### curl示例
 ######有附件上传
-	curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\还你我一片绿色商业计划书.pdf -F "sender=Betty Wang <wnbupt0916@gmail.com>" -F "receiver=bp <bp@pre-angel.com>" -F "sendtime=2015-12-16 10:43" -F "subject=还你我一片绿色——项目融资需求" -F "body=您好，谢谢观看！有意请联系本人" http://111.207.243.70:8838/IbotNLP/GetInfo
+	curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\还你我一片绿色商业计划书.pdf -F "sender=Betty Wang <wnbupt0916@gmail.com>" -F "receiver=bp <bp@pre-angel.com>" -F "sendtime=2015-12-16 10:43" -F "subject=还你我一片绿色——项目融资需求" -F "body=您好，谢谢观看！有意请联系本人" http://111.207.243.70:8838/Cinderella/GetInfo
 	
 ##### 返回示例	
 	{
-	    "city": "none",
-	    "startup": "还你我一片绿色",
-	    "company": "none",
-	    "founders": [
-	        "王永",
-		"北信科",
-		"王雁茂"
-	    ],
-	    "money": "100万",
-	    "equity": "10%",
-	    "industries": [
-	       "废品",
-	       "废品交易",
-	       "循环经济",
-	       "垃圾减量补贴",
-	       "垃圾分类",
-	       "互联网+",
-	       "回收员",
-	       "积分商城",
-	       "互联网+环保",
-	       "分类"
-	    ]
-	}
-
-######无附件上传
-	curl -H "Content-Type:application/json" -X POST -d '{"sender":"Betty Wang<wnbupt0916@gmail.com>","receiver":"bp <bp@pre-angel.com>","sendtime":"2015-12-16 10:43","subject":"全球领先的采购批发平台","body":"阿里巴巴集团是以马云为首的18人，于1999年在中国杭州创立，阿里巴巴(1688.com)是全球企业间(B2B)电子商务的著名品牌,为数千万网商提供海量商机信息和便捷安全的在线交易市场,也是商人们以商会友、真实互动的社区平台。"}' http://111.207.243.70:8838/IbotNLP/GetInfo 
-
-##### 返回示例	
-	{
-	    "city": "none",
+	    "city": "北京",
 	    "startup": "none",
 	    "company": "none",
 	    "founders": [
-	        "马云"
+	    	"果上",
+	        "王永刚",
+		"王雁茂",
+		"兰亚军",
+		"葛新权"
+	    ],
+	    "money": "100万",
+	    "equity": "10%",
+	    "industries": "电子商务"
+	}
+
+######无附件上传
+	curl -H "Content-Type:application/json" -X POST -d '{"sender":"Betty Wang<wnbupt0916@gmail.com>","receiver":"bp <bp@pre-angel.com>","sendtime":"2015-12-16 10:43","subject":"全球领先的采购批发平台","body":"阿里巴巴集团是以马云为首的18人，于1999年在中国杭州创立，阿里巴巴(1688.com)是全球企业间(B2B)电子商务的著名品牌,为数千万网商提供海量商机信息和便捷安全的在线交易市场,也是商人们以商会友、真实互动的社区平台。"}' http://111.207.243.70:8838/Cinderella/GetInfo 
+
+##### 返回示例	
+	{
+	    "city": "杭州",
+	    "startup": "none",
+	    "company": "none",
+	    "founders": [
+	        "none"
 	    ],
 	    "money": "none",
 	    "equity": "none",
-	    "industries": [
-	        "全球",
-	        "阿里巴巴"
-	    ]
+	    "industries": "电子商务"
 	}
 
 
