@@ -1,0 +1,179 @@
+*{
+	margin: 0;
+	padding: 0;
+	font-size: 16px;
+	font-family: "microsoft yahei";
+}
+ul,li
+{
+	list-style: none;
+}
+body
+{
+	width: 100%;
+	min-width: 1300px;
+	height:100%;
+}
+.clearfix:before,.clearfix:after
+{
+	content: ".";
+	display: block;
+	height: 0;
+	visibility: hidden;
+}
+.clearfix:after
+{
+	clear: both;
+}
+.active-page
+{
+	color: white;
+}
+.all-container
+{
+	width:1100px;
+	height: auto;
+	margin:50px auto;
+}
+.top-wrap
+{
+	width: 100%;
+	background-color: #F6F6F6;
+	height: auto;
+	padding: 20px;
+	box-sizing: border-box;
+}
+.top-wrap h1
+{
+	padding-bottom:20px ;
+	font-size: 30px;
+	font-weight: 100;
+}
+.top-wrap p
+{
+	line-height: 30px;
+	font-size: 18px;
+	text-align: justify;
+	word-break: break-all;
+}
+.left-wrap
+{
+	float:left;
+	width:770px;
+	height: auto;
+	background-color: #F6F6F6;
+	margin-top: 30px;
+	line-height: 40px;
+	padding: 20px;
+}
+.left-wrap img
+{
+	width: 20px;
+	height: 20px;
+	margin-right: 10px;
+}
+.left-wrap h2
+{
+	font-size: 20px;
+	font-weight: 100;
+}
+.left-wrap p,.left-wrap span,.left-wrap small
+{
+	font-size: 14px;
+}
+.altrowstable {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #a9c6c9;
+	border-collapse: collapse;
+	width: 100%;
+	margin: 10px 0;
+}
+.altrowstable th {
+	padding: 8px;
+	border: 1px solid #a9c6c9;
+}
+.altrowstable td {
+	padding: 8px;
+	border: 1px solid #a9c6c9;
+}
+.first-column,.second-column,.third-column
+{
+	width: 10%;
+	text-align: -webkit-center;
+}
+.fourth-column
+{
+	width: 40%;
+}
+.fifth-column
+{
+	width: 20%;
+}
+#res-table
+{
+	width:500px;	
+}
+#res-table td
+{
+	text-align: center;
+	text-align: -webkit-center;
+}
+.code-one,.code-two
+{
+	background-color: #272822;
+	height: auto;
+	padding: 20px 30px;	
+	width: 600px;
+    box-sizing: border-box;
+}
+.code-one p,.code-two p
+{
+	font-family: "consolas";
+    font-size: 14px;
+    color:#E6DB74;
+    line-height: 25px;
+}
+#code-result-one,#code-result-two
+{
+	width: initial;
+	height: auto;
+}
+
+.right-wrap
+{
+	float: left;
+	width:230px;
+	height: auto;
+	background-color: #F6F6F6;
+	margin-top: 30px;
+	line-height: 40px;
+	padding: 20px;
+	margin-left: 20px;
+}
+.right-wrap a
+{
+	display: block;
+	text-decoration: none;
+	color:#488FCE;
+	transition: all 0.3s ease;
+}
+.right-wrap a:hover
+{
+	color:#33CCCC;
+	cursor: pointer;
+}
+.fdiv
+{
+	position: fixed;
+	width: 44px;
+	right: 123px;	
+}
+#backtop
+{
+	bottom: 150px;
+	visibility: hidden;
+	transition: all ease 0.3s;
+}

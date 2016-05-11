@@ -1,0 +1,233 @@
+*{
+	margin: 0;
+	padding: 0;
+	font-size: 16px;
+	font-family: "microsoft yahei";
+}
+ul,li
+{
+	list-style: none;
+}
+body
+{
+	width: 100%;
+	min-width: 1300px;
+	height:100%;
+}
+.clearfix:before,.clearfix:after
+{
+	content: ".";
+	display: block;
+	height: 0;
+	visibility: hidden;
+}
+.clearfix:after
+{
+	clear: both;
+}
+.active-page
+{
+	color: white;
+}
+.isAttach
+{
+	margin:0 auto;
+	width: 100%;
+	height: 50px;
+	line-height: 50px;
+	background-color: #F6F6F6;
+}
+.isAttach-inner
+{
+	width: 1000px;
+	margin: 0 auto;
+}
+.isAttach-inner p
+{	
+	float: left;
+	color:#488FCE;
+	margin-right: 20px;
+}
+.isAttach-inner a
+{
+	color:#488FCE;
+	text-decoration:none;
+}
+.isAttach-inner a:hover
+{
+	color: #33CCCC;
+	text-decoration:none;
+}
+.isAttach p:hover
+{
+	cursor: pointer;
+	color: #33CCCC;
+	border-bottom:2px solid #33CCCC;
+	/*transition: all 0.5s ease;*/
+}
+.isAttach .active 
+{
+	color: #33CCCC;
+	border-bottom:2px solid #33CCCC;
+}
+.isAttach .active a
+{
+	color: #33CCCC;
+}
+.all-container
+{
+	width: 1000px;
+	height: auto;
+	margin: 0 auto;
+}
+
+.bootstrap-frm {
+	margin: 20px auto;
+	width: 1000px;
+	background: #F6F6F6;
+	padding: 20px 0px;
+	/*font: 12px "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+	color: #888;
+	text-shadow: 1px 1px 1px #FFF;
+	/*border: 1px solid #DDD;*/
+	/*border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;*/
+}
+
+.bootstrap-frm label {
+	display: block;
+	margin: 0px 0px 5px;
+}
+
+.bootstrap-frm label>span {
+	float: left;
+	width: 18%;
+	text-align: right;
+	padding-right: 10px;
+	margin-top: 10px;
+	color: #333;
+	/*font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+	/*font-weight: bold;*/
+}
+
+.bootstrap-frm input[type="text"],
+.bootstrap-frm input[type="email"],
+.bootstrap-frm input[type="file"],
+.bootstrap-frm textarea{
+	border: 1px solid #CCC;
+	color: #888;
+	height: 20px;
+	line-height: 15px;
+	margin-bottom: 16px;
+	margin-right: 6px;
+	margin-top: 2px;
+	outline: 0 none;
+	padding: 5px 0px 5px 5px;
+	width: 70%;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+.bootstrap-frm textarea{
+    line-height: 25px;
+}
+.bootstrap-frm select {
+	/*background: #FFF url('down-arrow.png') no-repeat right;
+	background: #FFF url('down-arrow.png') no-repeat right;
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;*/
+	text-indent: 0.01px;
+	text-overflow: '';
+	width: 71%;
+	height: 35px;
+	line-height: 15px;
+}
+
+.bootstrap-frm textarea {
+	height: 100px;
+	padding: 5px 0px 0px 5px;
+	width: 70%;
+}
+
+.bootstrap-frm .button {
+	background: #488FCE;
+	padding: 10px 25px 10px 25px;
+	color: white;
+	float: right;
+	margin-right: 100px;
+	transition: all 0.3s ease;
+	border-radius: 5px;
+    -webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+    border: none;
+}
+
+.bootstrap-frm .button:hover {
+	cursor: pointer;
+	background-color: #33CCCC;
+}
+.table-container
+{
+	margin-bottom:30px;
+}
+.divide-line
+{
+	position: relative;
+    margin: 50px 0;
+    color: #565656;
+}
+.dot-line-gray
+{
+	width: auto;
+    overflow: hidden;
+    position: relative;
+	z-index: 0;
+    /*background-image: url('http://static.bosonnlp.com/images/dot-line-gray.png');*/
+}
+.divide-line .title
+{
+	position: absolute;
+    padding-right: 26px;
+    background-color: #fff;
+    z-index: 1;
+    top: -17px;
+    font-size: 24px;
+}
+.altrowstable {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #a9c6c9;
+	border-collapse: collapse;
+	width: 100%;
+}
+.table.altrowstable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #a9c6c9;
+}
+.table.altrowstable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #a9c6c9;
+}
+.first-column
+{
+	width: 20%;
+	text-align: -webkit-center;
+	padding: 8px;
+}
+.oddrowcolor{
+	background-color:white;
+}
+.evenrowcolor{
+	background-color:#F6F6F6;;
+}
