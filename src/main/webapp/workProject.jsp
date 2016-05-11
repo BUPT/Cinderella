@@ -31,7 +31,7 @@
 		</div>
 		<div class="left-wrap">
 			<h2><img src="img/star.png"/>URL</h2>
-			<p>http://111.207.243.70:8838/IbotNLP/GetInfo</p>
+			<p>http://111.207.243.70:8838/Cinderella/GetInfo</p>
 			<h2><img src="img/star.png"/>HTTP Method</h2>
 			<p>POST</p>
 			<h2><img src="img/star.png"/>HTTP Header</h2>
@@ -133,21 +133,21 @@
 					<td>公司愿意付出的股权份额</td>
 				</tr>
 				<tr>
-					<td>industries</td>
-					<td>String数组</td>
+					<td>industry</td>
+					<td>String</td>
 					<td>公司所属领域</td>
 				</tr>
 			</table>
 			<h2><img src="img/star.png"/>CURL实例</h2>
 			<p>有附件上传 | Sample Code</p>
 			<div class="code-one">
-				<p>curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\还你我一片绿色商业计划书.pdf -F "sender=wnbupt0916@gmail.com" -F "receiver=bp@pre-angel.com" -F "sendtime=2015-12-16 10:43" -F "subject=还你我一片绿色——项目融资需求" -F "body=您好，谢谢观看！有意请联系本人" http://111.207.243.70:8838/IbotNLP/GetInfo</p>
+				<p>curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\还你我一片绿色商业计划书.pdf -F "sender=wnbupt0916@gmail.com" -F "receiver=bp@pre-angel.com" -F "sendtime=2015-12-16 10:43" -F "subject=还你我一片绿色——项目融资需求" -F "body=您好，谢谢观看！有意请联系本人" http://111.207.243.70:8838/Cinderella/GetInfo</p>
 			</div>
 			<p>Response</p>
 			<img src="img/code-result-1.png" id="code-result-one"/>
 			<p>无附件上传 | Sample Code</p>
 			<div class="code-two">
-				<p>curl -H "Content-Type:application/json" -X POST -d '{"sender":"wnbupt0916@gmail.com","receiver":"bp@pre-angel.com","sendtime":"2015-12-16 10:43","subject":"全球领先的采购批发平台","body":"阿里巴巴集团是以马云为首的18人，于1999年在中国杭州创立，阿里巴巴(1688.com)是全球企业间(B2B)电子商务的著名品牌,为数千万网商提供海量商机信息和便捷安全的在线交易市场,也是商人们以商会友、真实互动的社区平台。"}' http://111.207.243.70:8838/IbotNLP/GetInfo </p>
+				<p>curl -H "Content-Type:application/json" -X POST -d '{"sender":"wnbupt0916@gmail.com","receiver":"bp@pre-angel.com","sendtime":"2015-12-16 10:43","subject":"全球领先的采购批发平台","body":"阿里巴巴集团是以马云为首的18人，于1999年在中国杭州创立，阿里巴巴(1688.com)是全球企业间(B2B)电子商务的著名品牌,为数千万网商提供海量商机信息和便捷安全的在线交易市场,也是商人们以商会友、真实互动的社区平台。"}' http://111.207.243.70:8838/Cinderella/GetInfo </p>
 			</div>
 			<p>Response</p>
 			<img src="img/code-result-2.png" id="code-result-two"/>
