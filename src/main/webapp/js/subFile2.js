@@ -4,7 +4,7 @@ function fun()
 	var receiver = document.getElementById("receiver").value;
 	var sendtime = document.getElementById("sendtime").value;
 	var subject = document.getElementById("subject").value;
-	var body = document.getElementById("body").innerHTML;
+	var body = document.getElementById("body").value;
 	var datatosend = {
 		"sender":sender,
 		"receiver":receiver,

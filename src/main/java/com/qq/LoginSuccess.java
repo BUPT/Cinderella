@@ -726,7 +726,7 @@ public class LoginSuccess extends HttpServlet {
         }	
 		byte[] temp = sInput.getBytes("UTF-8");
 		sInput = new String(temp,"UTF-8");		
-		
+		System.out.println(sInput);
         String[] inPythonArgs = new String[]{
                 "python2",//windows下python执行路径
                 "/home/test/test/AIMail_release/api.py",//python工程入口函数
