@@ -97,7 +97,6 @@ public class LoginSuccess extends HttpServlet {
 		try {
 			receive(username,userPassword,response);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 	}
@@ -141,6 +140,18 @@ public class LoginSuccess extends HttpServlet {
 		else if(email_flag.equals("gmail"))
 		{
 			email_host = "pop.gmail.com";
+			email_port = "995";
+			props.setProperty("mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+		}
+		else if(email_flag.equals("qq"))
+		{
+			email_host = "pop.qq.com";
+			email_port = "995";
+			props.setProperty("mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+		}
+		else if(email_flag.equals("outlook"))
+		{
+			email_host = "pop-mail.outlook.com";
 			email_port = "995";
 			props.setProperty("mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 		}
@@ -726,7 +737,7 @@ public class LoginSuccess extends HttpServlet {
         }	
 		byte[] temp = sInput.getBytes("UTF-8");
 		sInput = new String(temp,"UTF-8");		
-		System.out.println(sInput);
+//		System.out.println(sInput);
         String[] inPythonArgs = new String[]{
                 "python2",//windows下python执行路径
                 "/home/test/test/AIMail_release/api.py",//python工程入口函数
