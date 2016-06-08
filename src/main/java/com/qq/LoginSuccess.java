@@ -47,6 +47,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
 import org.json.JSONArray;
@@ -737,25 +741,14 @@ public class LoginSuccess extends HttpServlet {
         }	
 		byte[] temp = sInput.getBytes("UTF-8");
 		sInput = new String(temp,"UTF-8");		
-//		System.out.println(sInput);
-        String[] inPythonArgs = new String[]{
-                "python2",//windows下python执行路径
-                "/home/test/test/AIMail_release/api.py",//python工程入口函数
-                 sInput,
-        };
-        Process process = Runtime.getRuntime().exec(inPythonArgs, null, new File("/home/test/test/AIMail_release"));
-        
-        BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream(),"UTF-8"));
-        String line;
-        String result = "";
-        while ((line = in.readLine())!= null){
-            System.out.println("line:"+line);
-            result += line;
-        }
-        in.close();
-        process.waitFor();
-        
-        JSONObject jsonobj = new JSONObject(result);  
+		String url = "http://111.207.243.70:8839/ibot/api/GetInfo";
+   	 	HttpClient httpclient = new HttpClient();    	 
+   	 	HttpMethod method = postMethod(url,sInput);
+   	 	httpclient.executeMethod(method);
+   	 	String finalStr = method.getResponseBodyAsString();
+   	 	System.out.println(finalStr);
+		
+        JSONObject jsonobj = new JSONObject(finalStr);  
 
         if(jsonobj.has("city")){
 	  		  bot.setLocation(jsonobj.getString("city"));
@@ -788,5 +781,12 @@ public class LoginSuccess extends HttpServlet {
   	    
 		return bot;
 	}
-	
+	public static HttpMethod postMethod(String url,String sInput) throws IOException{
+	    PostMethod post = new PostMethod(url);
+	    post.setRequestHeader("Accept", "application/json");
+	    post.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, "UTF-8");
+	    post.setRequestBody(sInput);
+	    post.releaseConnection();
+	    return post;
+	}	
 }
