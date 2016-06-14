@@ -333,6 +333,7 @@ public class GetInfo extends HttpServlet {
    	 	String finalStr = method.getResponseBodyAsString();
    	 	System.out.println(finalStr);
 		
+//   	finalStr = "{\"city\": \"None\",\"company\": \"None\",\"equity\": \"None\",\"founders\": \"None\",\"industry\": \"电子商务\",\"money\": \"500万\",\"startup\": \"银驾-模式报告（）\"}";
         JSONObject jsonobj = new JSONObject(finalStr);  
 
         if(jsonobj.has("city")){
@@ -351,16 +352,28 @@ public class GetInfo extends HttpServlet {
   	    	  bot.setTranStock(jsonobj.getString("equity"));
   	    }
   	    if(jsonobj.has("founders")){
-  	    	JSONArray jsonArray = new JSONArray();
-  	    	jsonArray = jsonobj.getJSONArray("founders");
-  	    	Set<String> set = new HashSet<String>();
-  	    	for(int i=0;i<jsonArray.length();i++)
+  	    	if(jsonobj.getString("founders").equals("None")||jsonobj.getString("founders").equals("none"))
   	    	{
-  	    		set.add(jsonArray.getString(i));
+  	    		Set<String> set = new HashSet<String>();
+  	    		set.add(jsonobj.getString("founders"));
+  	    		bot.setFounderName(set);
   	    	}
-  	    	bot.setFounderName(set);
-  	    }  	    
-		bot.setBizArea("电子商务");				
+  	    	else
+  	    	{
+  	    		JSONArray jsonArray = new JSONArray();
+  	  	    	jsonArray = jsonobj.getJSONArray("founders");
+  	  	    	Set<String> set = new HashSet<String>();
+  	  	    	for(int i=0;i<jsonArray.length();i++)
+  	  	    	{
+  	  	    		set.add(jsonArray.getString(i));
+  	  	    	}
+  	  	    	bot.setFounderName(set);
+  	    	}	    	
+  	    }  
+  	    if(jsonobj.has("industry"))
+  	    {
+  	    	bot.setBizArea(jsonobj.getString("industry"));
+  	    }						
 		return bot;
 	}
 	public HttpMethod postMethod(String url,String sInput) throws IOException{
