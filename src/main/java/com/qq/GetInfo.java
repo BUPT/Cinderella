@@ -91,7 +91,7 @@ public class GetInfo extends HttpServlet {
 		}
 		
         EmailInput email = new EmailInput(); 
-        System.out.println(request.getHeader("Content-Type"));
+        System.out.println("Content-Type:"+request.getHeader("Content-Type"));
 		
         if(request.getHeader("Content-Type").indexOf("multipart/form-data")!=-1)
 		{   						
@@ -113,14 +113,13 @@ public class GetInfo extends HttpServlet {
 			e.printStackTrace();
 		}	
 		
-		BotResult botResult = new BotResult();
-	    try {
-			botResult = DealNLP(filename,botResult);
+		try {
+			String botResult = DealNLP(filename);
+			iBotOutput(botResult,response);
 		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-	    iBotOutput(botResult,response);
-		
+		}	   		
 	}
 	
 	public EmailInput RevMultiData(EmailInput email,HttpServletRequest request, HttpServletResponse response,String realPath) throws UnsupportedEncodingException{
@@ -142,7 +141,7 @@ public class GetInfo extends HttpServlet {
         diskFileItemFactory.setSizeThreshold(sizeThreshold);
         ServletFileUpload servletFileUpload = new ServletFileUpload(diskFileItemFactory);
         servletFileUpload.setSizeMax(sizeMax);
-        System.out.println(realPath);
+        System.out.println("File Path:"+realPath);
         List<FileItem> fileItems = null;
         try{
             fileItems = servletFileUpload.parseRequest(request);
@@ -157,7 +156,7 @@ public class GetInfo extends HttpServlet {
                 	if(!fileName.equals(URLDecoder.decode(fileName,"UTF-8")))
                     {
                     	fileName = URLDecoder.decode(fileName,"UTF-8");   
-                    	System.out.println(fileName);
+//                    	System.out.println(fileName);
                     }
 					fileItem.write(new File(realPath+File.separator+fileName));
 					attachTemp.add(realPath+File.separator+fileName);
@@ -308,7 +307,7 @@ public class GetInfo extends HttpServlet {
 	    System.out.println("Done");  					
 	}
 	
-	public BotResult DealNLP(String filename,BotResult bot) throws IOException, InterruptedException{
+	public String DealNLP(String filename) throws IOException, InterruptedException{
 		String fileName = filename;
 		File fileTemp = new File(fileName);
 		String sInput = "";
@@ -332,49 +331,9 @@ public class GetInfo extends HttpServlet {
    	 	httpclient.executeMethod(method);
    	 	String finalStr = method.getResponseBodyAsString();
    	 	System.out.println(finalStr);
-		
-//   	finalStr = "{\"city\": \"None\",\"company\": \"None\",\"equity\": \"None\",\"founders\": \"None\",\"industry\": \"电子商务\",\"money\": \"500万\",\"startup\": \"银驾-模式报告（）\"}";
-        JSONObject jsonobj = new JSONObject(finalStr);  
+//   	String finalStr = "{\"city\": \"\",\"company\": \"\",\"equity\": \"\",\"founders\": \"\",\"industry\": \"\",\"money\": \"500万\",\"startup\": \"银驾-模式报告（）\"}";
+		return finalStr;
 
-        if(jsonobj.has("city")){
-	  		  bot.setLocation(jsonobj.getString("city"));
-	  	}
-	    if(jsonobj.has("money")){
-	  		  bot.setFinanceLimit(jsonobj.getString("money"));
-	  	}
-  	    if(jsonobj.has("company")){
-  	    	  bot.setCompanyName(jsonobj.getString("company"));
-  	    }
-  	    if(jsonobj.has("startup")){
-  	    	  bot.setProjectName(jsonobj.getString("startup"));
-  	    }
-  	    if(jsonobj.has("equity")){
-  	    	  bot.setTranStock(jsonobj.getString("equity"));
-  	    }
-  	    if(jsonobj.has("founders")){
-  	    	if(jsonobj.getString("founders").equals("None")||jsonobj.getString("founders").equals("none"))
-  	    	{
-  	    		Set<String> set = new HashSet<String>();
-  	    		set.add(jsonobj.getString("founders"));
-  	    		bot.setFounderName(set);
-  	    	}
-  	    	else
-  	    	{
-  	    		JSONArray jsonArray = new JSONArray();
-  	  	    	jsonArray = jsonobj.getJSONArray("founders");
-  	  	    	Set<String> set = new HashSet<String>();
-  	  	    	for(int i=0;i<jsonArray.length();i++)
-  	  	    	{
-  	  	    		set.add(jsonArray.getString(i));
-  	  	    	}
-  	  	    	bot.setFounderName(set);
-  	    	}	    	
-  	    }  
-  	    if(jsonobj.has("industry"))
-  	    {
-  	    	bot.setBizArea(jsonobj.getString("industry"));
-  	    }						
-		return bot;
 	}
 	public HttpMethod postMethod(String url,String sInput) throws IOException{
         PostMethod post = new PostMethod(url);
@@ -384,28 +343,16 @@ public class GetInfo extends HttpServlet {
         post.releaseConnection();
         return post;
     }	
-	public void iBotOutput(BotResult bot,HttpServletResponse response) throws JSONException
+
+	public void iBotOutput(String botResult,HttpServletResponse response) throws JSONException
 	{
 		try {		
 			response.reset();
 			response.setCharacterEncoding("UTF-8");
 			response.setContentType("text/json; charset=UTF-8");
-			response.setHeader("Access-Control-Allow-Origin", "*");
-			JSONStringer stringer = new JSONStringer();  
-			try {
-				 stringer.object().key("city").value(bot.getLocation()).  
-			        key("startup").value(bot.getProjectName()).  
-			        key("company").value(bot.getCompanyName()).  
-			        key("founders").value(bot.getFounderName()).
-			        key("money").value(bot.getFinanceLimit()).
-			        key("equity").value(bot.getTranStock()).
-			        key("industries").value(bot.getBizArea()).endObject(); 
-					System.out.println("---------------输出ing---------------------");
-					response.getOutputStream().write(stringer.toString().getBytes("UTF-8"));
-			} 
-			catch (IOException e) {
-				e.printStackTrace();
-			}
+			response.setHeader("Access-Control-Allow-Origin", "*");			
+			System.out.println("---------------输出ing---------------------");
+			response.getOutputStream().write(botResult.getBytes("UTF-8"));			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
