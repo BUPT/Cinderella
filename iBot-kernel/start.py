@@ -40,6 +40,8 @@ def get_info():
         abort(400)
     info = ibot.get_info(content, sep='\n\n\n', encoding='utf-8')
 
+    print info
+
     return json.dumps(info, ensure_ascii=False, sort_keys=True, indent=4), 201
 
     # if request.json:
