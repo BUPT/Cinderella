@@ -14,6 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -102,9 +103,25 @@ public class GetInfo extends HttpServlet {
 		{	
 			email = RevJsonData(email,request);		    
 		}     
+		else
+		{
+			email.setEmailBody("CINDERELLA-FALSE");
+		}
 		try 
 		{
 			MailTxtInput(filename,email);
+			
+			//Get HTTP Headers
+			Map<String, String> map = new HashMap<String, String>();
+		    Enumeration headerNames = request.getHeaderNames();
+		    while (headerNames.hasMoreElements()) 
+		    {
+		        String key = (String) headerNames.nextElement();
+		        String value = request.getHeader(key);
+		        map.put(key, value);
+		    }
+		    
+		    //into the CINDERELLA test unit
 			if(email.getEmailBody().equals("CINDERELLA"))
 		    {
 				File fileTemp = new File(filename);
@@ -120,10 +137,18 @@ public class GetInfo extends HttpServlet {
 		            	sInput += line;
 		            }    
 		            read.close();
-		        }	
-//				System.out.println(sInput);
-				iBot_Test_Output(sInput,response);	
+		        }					
+				iBot_Test_Output(sInput,response,map);	
 	        }
+			
+			//use the wrong API Content type
+			else if(email.getEmailBody().equals("CINDERELLA-FALSE"))
+			{
+				String sInput = "Please use the right Content Type!";
+				iBot_Test_Output(sInput,response,map);
+			}
+			
+			//the right way
 	        else
 	        {
 	        	try 
@@ -372,15 +397,23 @@ public class GetInfo extends HttpServlet {
 			e.printStackTrace();
 		}
 	}
-	public void iBot_Test_Output(String botResult,HttpServletResponse response) throws JSONException
+	public void iBot_Test_Output(String botResult,HttpServletResponse response, Map<String, String> map) throws JSONException
 	{
 		try {		
 			response.reset();
 			response.setCharacterEncoding("UTF-8");
-			response.setContentType("text/plain; charset=UTF-8");
+			response.setContentType("text/json; charset=UTF-8");
 			response.setHeader("Access-Control-Allow-Origin", "*");			
 			System.out.println("-----------------进入彩蛋-----------------");
-			response.getOutputStream().write(botResult.getBytes("UTF-8"));			
+			JSONStringer stringer = new JSONStringer();
+			try 
+			{
+				stringer.object().key("headers").value(map).key("content").value(botResult).endObject(); 
+				response.getOutputStream().write(stringer.toString().getBytes("UTF-8"));
+			} 
+			catch (IOException e) {
+				e.printStackTrace();
+			}			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
