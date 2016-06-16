@@ -35,19 +35,30 @@
 		<version>1.2.1</version>
 	</dependency>
 	<dependency>
-		<groupId>mysql</groupId>
-		<artifactId>mysql-connector-java</artifactId>
-		<version>5.1.38</version>
-	</dependency>
-	<dependency>
-		<groupId>net.sourceforge.jexcelapi</groupId>
-		<artifactId>jxl</artifactId>
-		<version>2.6.12</version>
-	</dependency>
-	<dependency>
 		<groupId>javax.mail</groupId>
 		<artifactId>mail</artifactId>
 		<version>1.4.7</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.apache.httpcomponents</groupId>
+	  <artifactId>httpclient</artifactId>
+	  <version>4.3.6</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.apache.httpcomponents</groupId>
+	  <artifactId>httpasyncclient</artifactId>
+	  <version>4.0.2</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.apache.httpcomponents</groupId>
+	  <artifactId>httpmime</artifactId>
+	  <version>4.3.6</version>
+	</dependency>
+	<!-- http://mvnrepository.com/artifact/commons-httpclient/commons-httpclient -->
+	<dependency>
+	    <groupId>commons-httpclient</groupId>
+	    <artifactId>commons-httpclient</artifactId>
+	    <version>3.1</version>
 	</dependency>
   </dependencies>
   <build>

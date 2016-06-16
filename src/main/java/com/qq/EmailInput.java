@@ -13,11 +13,11 @@ public class EmailInput {
 	
 	public EmailInput()
 	{
-		sender="none";
-		receiver="none";
-		sendTime="none";
-		emailSubject="none";
-		emailBody="none";
+		sender="";
+		receiver="";
+		sendTime="";
+		emailSubject="";
+		emailBody="";
 		//emailAttach;
 	}
 
