@@ -223,16 +223,6 @@ $ chmod 755 /etc/init.d/tomcat
 $ service tomcat start
 ```
 
-出现以下信息表示配置成功：
-
-```shell
-Using CATALINA_BASE:   /usr/local/tomcat
-Using CATALINA_HOME:   /usr/local/tomcat
-Using CATALINA_TMPDIR:/usr/local/tomcat/temp
-Using JRE_HOME:        /usr/lib/jvm/java-7-openjdk-amd64
-Using CLASSPATH:      /usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar
-```
-
 #### 2.3 安装配置 Python 依赖包
 
 安装程序运行需要的依赖包`numpy`、`SciPy`、`sklearn`、`jieba`、`pynlpir`、`Flask`。
