@@ -279,7 +279,7 @@ $ cd /usr/local/tomcat/bin
 $ ./startup.sh
 ```
 
-在浏览器输入`http://your-IP:your-tomcat-port/Cinderella/GetInfo`
+在浏览器输入`http://your_ip_address:your-tomcat-port/Cinderella/GetInfo`
 
 如果出现项目主页则说明配置成功。
 
