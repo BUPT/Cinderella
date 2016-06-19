@@ -66,7 +66,7 @@ POST
    </tr>
 </table>
 
-## 返回参数 
+## 返回参数
 <table class="table table-bordered table-striped table-condensed">
    <tr>
       <td>参数名</td>
@@ -113,8 +113,8 @@ POST
 ## curl示例
 ### 有附件上传
 	curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\还你我一片绿色商业计划书.pdf -F "sender=Betty Wang <wnbupt0916@gmail.com>" -F "receiver=bp <bp@pre-angel.com>" -F "sendtime=2015-12-16 10:43" -F "subject=还你我一片绿色——项目融资需求" -F "body=您好，谢谢观看！有意请联系本人" http://111.207.243.70:8838/Cinderella/GetInfo
-	
-#### 返回示例	
+
+#### 返回示例
 	{
 	    "city": "北京",
 	    "startup": "none",
@@ -132,9 +132,9 @@ POST
 	}
 
 ### 无附件上传
-	curl -H "Content-Type:application/json" -X POST -d '{"sender":"Betty Wang<wnbupt0916@gmail.com>","receiver":"bp <bp@pre-angel.com>","sendtime":"2015-12-16 10:43","subject":"全球领先的采购批发平台","body":"阿里巴巴集团是以马云为首的18人，于1999年在中国杭州创立，阿里巴巴(1688.com)是全球企业间(B2B)电子商务的著名品牌,为数千万网商提供海量商机信息和便捷安全的在线交易市场,也是商人们以商会友、真实互动的社区平台。"}' http://111.207.243.70:8838/Cinderella/GetInfo 
+	curl -H "Content-Type:application/json" -X POST -d '{"sender":"Betty Wang<wnbupt0916@gmail.com>","receiver":"bp <bp@pre-angel.com>","sendtime":"2015-12-16 10:43","subject":"全球领先的采购批发平台","body":"阿里巴巴集团是以马云为首的18人，于1999年在中国杭州创立，阿里巴巴(1688.com)是全球企业间(B2B)电子商务的著名品牌,为数千万网商提供海量商机信息和便捷安全的在线交易市场,也是商人们以商会友、真实互动的社区平台。"}' http://111.207.243.70:8838/Cinderella/GetInfo
 
-#### 返回示例	
+#### 返回示例
 	{
 	    "city": "杭州",
 	    "startup": "none",
@@ -147,16 +147,152 @@ POST
 	    "industries": "电子商务"
 	}
 
-## 📖 Documentation
-
-Visit the [Documentation](https://github.com/AKAMobi/Cinderella/wiki) for extensive information on getting setup, using, and deploying Cinderella.
 
 
+---
 
 
 
+## How to deploy
 
+### 1. clone代码至本地
 
+```shell
+$ git clone git@github.com:AKAMobi/Cinderella.git
+```
 
+### 2. 安装配置项目依赖
 
+#### 2.1 安装配置 JDK
 
+```shell
+$ sudo apt-get install openjdk-7-jdk
+$ vim /etc/profile
+```
+
+在profile的最后添加以下语句：
+
+```shell
+exportJAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+export JAVA_BIN=${JAVA_HOME}/bin
+export JRE_HOME=${JAVA_HOME}/jre
+exportCLASSPATH=.:{JAVA_HOME}/lib:{JRE_HOME}/lib:${JRE_HOME}/lib/charsets.jar
+export PATH={JAVA_HOME}/bin:{JRE_HOME}/bin:$PATH
+```
+
+执行如下命令使配置立即生效：
+
+```shell
+$ sudo source /etc/profile
+```
+
+#### 2.2 安装配置 Tomcat 7
+
+下载tomcat安装包
+
+```shell
+$ cd /usr/local/src/
+$ wget http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.14/bin/apache-tomcat-7.0.14.tar.gz
+```
+
+配置 Tomcat
+
+```shell
+$ tar zxvf apache-tomcat-7.0.14.tar.gz
+$ mv apache-tomcat-7.0.14 /usr/local/tomcat
+$ cp -p /usr/local/tomcat/bin/catalina.sh/etc/init.d/tomcat
+$ vim /etc/init.d/tomcat
+```
+
+在第二行（即`#!/bin/sh`下一行）加入以下内容：
+
+```shell
+JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+CATALINA_HOME=/usr/local/tomcat
+```
+
+修改权限：
+
+```shell
+$ chmod 755 /etc/init.d/tomcat
+```
+
+启动Tomcat：
+
+```shell
+$ service tomcat start
+```
+
+出现以下信息表示配置成功：
+
+```shell
+Using CATALINA_BASE:   /usr/local/tomcat
+Using CATALINA_HOME:   /usr/local/tomcat
+Using CATALINA_TMPDIR:/usr/local/tomcat/temp
+Using JRE_HOME:        /usr/lib/jvm/java-7-openjdk-amd64
+Using CLASSPATH:      /usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar
+```
+
+#### 2.3 安装配置 Python 依赖包
+
+安装程序运行需要的依赖包`numpy`、`SciPy`、`sklearn`、`jieba`、`pynlpir`、`Flask`。
+
+一般系统会自带Python，安装依赖包则是使用`pip`命令或`apt-get`命令，所有下载的依赖包最终会在`/usr/local/lib/python2.7/dist-packages`文件夹中。
+
+```shell
+$ pip install numpy
+$ pip install Scipy
+$ pip install sklearn
+$ pip install jieba
+$ pip install pynlpir
+$ pip install Flask
+```
+
+* Tips： 如果使用`pip`命令安装出现问题可以换用`apt-get`命令。
+
+### 3. 部署项目
+
+#### 3.1 部署项目 Web 部分 
+
+安装Maven
+
+```shell
+$ sudo apt-get install maven
+```
+
+使用Maven打包项目
+
+```shell
+$ mvn war:war
+```
+
+将打包成功位于项目根目录`target`文件夹下的`Cinderella.war`放置在Tomcat的`webapps`目录下
+
+```shell
+$ cp source_dir /usr/local/tomcat/webapps
+```
+
+开启Tomcat服务器
+
+```shell
+$ cd /usr/local/tomcat/bin
+$ ./startup.sh
+```
+
+在浏览器输入`http://your-IP:your-tomcat-port/Cinderella/GetInfo`
+
+如果出现项目主页则说明配置成功。
+
+#### 3.2 部署项目 Python 部分
+
+进入到项目根目录下的`ibot-kernel`文件夹，运行`start.py`文件
+
+```shell
+$ python start.py
+```
+
+* Tips：可修改`start.py`文件中的`port`变量值修改端口值
+
+在浏览器输入`http://your_ip_address:your_port/ibot`
+
+如果可以出现`welcome to ibot`说明配置成功。
