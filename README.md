@@ -4,15 +4,16 @@ Cinderella is a bot that does paper works in order to helps people to summary do
 
 `Cinderella - a woman whose merits were not been recognized but who then achieves sudden success and recognition`
 
-##### 版本
+## 版本
 0.1.0
-##### 访问地址
+
+## 访问地址
 http://111.207.243.70:8838/Cinderella/GetInfo
 
-##### 访问方式  
+## 访问方式  
 POST
 
-##### 请求参数
+## 请求参数
 <table class="table table-bordered table-striped table-condensed">
    <tr>
       <td>参数名</td>
@@ -65,7 +66,7 @@ POST
    </tr>
 </table>
 
-##### 返回参数 
+## 返回参数 
 <table class="table table-bordered table-striped table-condensed">
    <tr>
       <td>参数名</td>
@@ -109,11 +110,11 @@ POST
    </tr>
 </table>
 
-##### curl示例
-######有附件上传
+## curl示例
+### 有附件上传
 	curl -H "Content-Type:multipart/form-data" -F uploadFiles=@D:\ibotest\还你我一片绿色商业计划书.pdf -F "sender=Betty Wang <wnbupt0916@gmail.com>" -F "receiver=bp <bp@pre-angel.com>" -F "sendtime=2015-12-16 10:43" -F "subject=还你我一片绿色——项目融资需求" -F "body=您好，谢谢观看！有意请联系本人" http://111.207.243.70:8838/Cinderella/GetInfo
 	
-##### 返回示例	
+#### 返回示例	
 	{
 	    "city": "北京",
 	    "startup": "none",
@@ -130,10 +131,10 @@ POST
 	    "industries": "电子商务"
 	}
 
-######无附件上传
+### 无附件上传
 	curl -H "Content-Type:application/json" -X POST -d '{"sender":"Betty Wang<wnbupt0916@gmail.com>","receiver":"bp <bp@pre-angel.com>","sendtime":"2015-12-16 10:43","subject":"全球领先的采购批发平台","body":"阿里巴巴集团是以马云为首的18人，于1999年在中国杭州创立，阿里巴巴(1688.com)是全球企业间(B2B)电子商务的著名品牌,为数千万网商提供海量商机信息和便捷安全的在线交易市场,也是商人们以商会友、真实互动的社区平台。"}' http://111.207.243.70:8838/Cinderella/GetInfo 
 
-##### 返回示例	
+#### 返回示例	
 	{
 	    "city": "杭州",
 	    "startup": "none",
@@ -146,10 +147,10 @@ POST
 	    "industries": "电子商务"
 	}
 
+## 📖 Documentation
 
+Visit the [Documentation](https://github.com/AKAMobi/Cinderella/wiki) for extensive information on getting setup, using, and deploying Cinderella.
 
-
-TEST C9 协同
 
 
 
