@@ -173,10 +173,10 @@ $ vim /etc/profile
 在profile的最后添加以下语句：
 
 ```shell
-exportJAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
 export JAVA_BIN=${JAVA_HOME}/bin
 export JRE_HOME=${JAVA_HOME}/jre
-exportCLASSPATH=.:{JAVA_HOME}/lib:{JRE_HOME}/lib:${JRE_HOME}/lib/charsets.jar
+export CLASSPATH=.:{JAVA_HOME}/lib:{JRE_HOME}/lib:${JRE_HOME}/lib/charsets.jar
 export PATH={JAVA_HOME}/bin:{JRE_HOME}/bin:$PATH
 ```
 
@@ -200,7 +200,7 @@ $ wget http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.14/bin/apache-tomcat-
 ```shell
 $ tar zxvf apache-tomcat-7.0.14.tar.gz
 $ mv apache-tomcat-7.0.14 /usr/local/tomcat
-$ cp -p /usr/local/tomcat/bin/catalina.sh/etc/init.d/tomcat
+$ cp -p /usr/local/tomcat/bin/catalina.sh /etc/init.d/tomcat
 $ vim /etc/init.d/tomcat
 ```
 
@@ -244,13 +244,41 @@ $ pip install Flask
 
 #### 3.1 部署项目 Web 部分 
 
-安装Maven
+下载Maven
+
+下载链接：http://maven.apache.org/download.cgi，选择最新版本的maven安装包，我安装时最新安装包是apache-maven-3.3.9-bin.tar.gz
+
+解压安装
 
 ```shell
-$ sudo apt-get install maven
+$  tar -zxvf apache-maven-3.3.9-bin.tar.gz
+$  sudo mv apache-maven-3.3.9 /usr/local/
 ```
 
-使用Maven打包项目
+设置环境变量
+
+```shell
+$  vim /etc/profile
+```
+
+在文件最后添加以下内容
+
+```shell
+#set maven environment
+M2_HOME=/usr/local/apache-maven-3.3.9
+export M2_HOME
+export MAVEN_OPTS="-Xms256m -Xmx512m"
+export PATH=$M2_HOME/bin:$PATH
+```
+
+执行如下命令使配置立即生效，并检查maven是否安装成功：
+
+```shell
+$ sudo source /etc/profile
+$ mvn -version
+```
+
+进入项目根目录后使用Maven打包项目
 
 ```shell
 $ mvn war:war
@@ -273,7 +301,14 @@ $ ./startup.sh
 
 如果出现项目主页则说明配置成功。
 
-#### 3.2 部署项目 Python 部分
+#### 3.2 部署项目中 Python 接口部分
+
+在`GetInfo.java`文件中实际是调用了python web接口
+
+	sInput = new String(temp,"UTF-8");		
+	String url = "http://111.207.243.70:8839/ibot/api/GetInfo";
+   	HttpClient httpclient = new HttpClient();    	 
+   	HttpMethod method = postMethod(url,sInput);
 
 进入到项目根目录下的`ibot-kernel`文件夹，运行`start.py`文件
 
@@ -285,4 +320,4 @@ $ python start.py
 
 在浏览器输入`http://your_ip_address:your_port/ibot`
 
-如果可以出现`welcome to ibot`说明配置成功。
+如果可以出现`welcome to ibot!`说明python web接口配置成功。
