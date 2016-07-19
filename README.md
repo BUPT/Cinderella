@@ -246,7 +246,9 @@ $ pip install Flask
 
 下载Maven
 
-下载链接：http://maven.apache.org/download.cgi，选择最新版本的maven安装包，我安装时最新安装包是apache-maven-3.3.9-bin.tar.gz
+下载链接：http://maven.apache.org/download.cgi
+
+选择最新版本的maven安装包，我安装时最新安装包是apache-maven-3.3.9-bin.tar.gz
 
 解压安装
 
