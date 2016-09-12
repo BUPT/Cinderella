@@ -2,12 +2,30 @@
 
 from __future__ import unicode_literals
 from common import get_regs, get_compile_regs
-import re
-import os
+import re,cPickle
+import os,jieba
+from sklearn.externals import joblib
 
 REGS = get_compile_regs(get_regs('money'))
 DICT_PATH = './dict/'
 
+def load_stopwords(path):
+    '''
+    载入停用词
+    :param path:
+    :return:
+    '''
+    stopwords = set()
+    with open(path, 'rb') as f:
+        for line in f:
+            word = line.strip().decode('utf-8')
+            stopwords.add(word)
+    return stopwords
+
+
+STOPWORDS = load_stopwords('%sstopwords.txt' % DICT_PATH)
+DYN_DICT = cPickle.load(open('%smoney_dynamic_dict_CHI.txt' % DICT_PATH))[0]
+KNN = joblib.load('%smoney_knn_model.pkl' % DICT_PATH)
 
 def _get_module_path(path):
     real_path = os.path.join(os.getcwd(), os.path.dirname(__file__), path)
@@ -23,39 +41,37 @@ def get_money(document, mode=2):
 
 def money_1(document):
     '''
-    抽取融资额
-    :param document: chunk 包含 sentence,words,labels
-    :return: 字典 {"status":1,"money":[100万]} 或者 {"status":0.5,"money":[200万]}
-            或者 {"status":0,"money":[100万,200万]}=> 1 表示 高置信度抽取,0.5 表示 低置信度抽取 0 表示 全文抽取
+    借助knn分类器定位抽取
+    :param document:
+    :return:
     '''
-    global REGS
+    global STOPWORDS,DYN_DICT,REGS,KNN
 
     money = []
     # 金额标签
-    moneyTag = re.compile(u"(\d+\.?\d*[亿万美金RMB]+)")
+    money_reg = ['万','w','W','亿','百万','美元','美金','元','RMB']
+    moneyTag = ('|').join(['\d?\.?\d+%s'%x for x in money_reg])
     # 移动窗口
-    window = 3
+    window = 5
     for sentence in document.sentences:
         # 优先定位 金额的位置
-        hasMoney = re.search(moneyTag, sentence.raw)
+        hasMoney = re.findall(moneyTag, sentence.raw)
         if hasMoney:
             # 匹配的起点和终点
-            start, end = hasMoney.span()
-            if start < window:
-                start = window
-            if end > len(sentence.raw) - window:
-                end = len(sentence.raw) - window
-            # 按优先级 检测 窗口词是否包含融资关键词
-            count = 0
-            for reg in REGS:
-                if re.search(reg, sentence.raw[start - window: end + window]):
-                    if count < len(REGS) / 2:
-                        return {"status": 1, "money": hasMoney.group()}
-                    else:
-                        return {"status": 0.5, "money": [hasMoney.group()]}
-                count += 1
-            # 如果检测不到关键词
-            money.append(hasMoney.group())
+            money_end = 0
+            for money in hasMoney:
+                new_sentence = sentence.raw[money_end:]
+                money_start, money_end = re.search(re.compile(money),new_sentence).span()
+                #边界判断
+                window_start = money_start - window if money_start > window else 0
+                window_end = money_end + window if money_end < len(sentence.raw) - window else len(sentence.raw)
+                #取出窗口内词,转换向量
+                sentence_in_window = new_sentence[window_start : money_start] + new_sentence[money_end : window_end]
+                vec = sentence2vec(sentence_in_window,DYN_DICT)
+                #判断是否为融资额
+                is_money = KNN.predict(vec)
+                if is_money:
+                    return {"status": 1, "money": money}
 
     return {"status": 0.5, "money": money}
 
@@ -105,6 +121,8 @@ def load_bagWords(tag):
     return bagofWords
 
 
+
+
 def cutWindowWord(document):
     '''
     取窗口词
@@ -112,7 +130,7 @@ def cutWindowWord(document):
     :return:
     '''
     result = []
-    stopWords = load_stopwords(_get_module_path('%sstopwords.txt' % DICT_PATH))
+
     wordList = []
     for sentence in document:
         wordList.extend([w.raw for w in sentence.words])
@@ -143,7 +161,7 @@ def cutWindowWord(document):
         # 去除100万
         try:
             if float(wordList[index[i] - 1]):
-                temp = removeStopWords(wordList[start:end], stopWords)
+                temp = removeStopWords(wordList[start:end], STOPWORDS)
                 result.append(temp)
         except:
             continue
@@ -157,29 +175,49 @@ def findIndex(inList, value):
     return index
 
 
-def removeStopWords(inList, stopWords):
+def removeStopWords(inList):
+    '''
+    去除停用词
+    :param inList:
+    :return:
+    '''
+    global STOPWORDS
     wordList = []
     for word in list(inList):
         word = word.strip()
-        if word != '' and word not in stopWords:
+        if word != '' and word not in STOPWORDS:
             wordList.append(word)
     return wordList
 
+def sentence2vec(sentence, dynamic_dicts):
+    """ 使用动态词典将句子转换成特征向量
 
-def load_stopwords(path):
-    '''
-    载入停用词
-    :param path:
-    :return:
-    '''
-    stopwords = set()
-    with open(path, 'rb') as f:
-        for line in f:
-            word = line.strip().decode('utf-8')
-            stopwords.add(word)
-    return stopwords
+    每个类别分别生成4个特征:
+        - average: 平均强度
+        - top_1: 类别强度最高
+        - top_2: 类别强度前2之和
+        - top_4: 类别强度前4之和
+    """
+    global STOPWORDS
+    if not isinstance(sentence,list):
+        sentence = removeStopWords(jieba.cut(sentence))
+
+    vec = []
+    weights = [dynamic_dicts.get(word, 0.1) for word in sentence]
+    if not weights:
+        return [0]*4
+
+    weights = sorted(weights, reverse=True)
+
+    # average
+    vec.append(sum(weights) / weights)
+    # top_1
+    vec.append(weights[0])
+    # top_2
+    vec.append(sum(weights[:2]))
+    # top_4
+    vec.append(sum(weights[:4]))
+
+    return vec
 
 
-# txt = '北京网红科技公司融资300万出让股份10到20%大约400亿用于新一轮利率15%占股的500美金公司扩展业务'
-#
-# print get_money(txt,2)
