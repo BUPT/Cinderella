@@ -36,7 +36,7 @@ def equity_1(document):
             否则 返回None
     '''
     global equityTag,DYN_DICT,KNN
-
+    result = []
     # 移动窗口
     window = 5
     for sentence in document.sentences:
@@ -58,10 +58,11 @@ def equity_1(document):
                 sentence_in_window = new_sentence[window_start : equity_start] + new_sentence[equity_end : window_end]
                 vec = sentence2vec(sentence_in_window,DYN_DICT)
                 is_equity = KNN.predict([vec])
-                if is_equity:
-                    return {"status": 1, "equity": reg_equity}
+                weight = 0.95 if is_equity else 0.05
 
-    return None
+                result.append((reg_equity,weight))
+
+    return result
 
 def is_legal(equity):
     '''
