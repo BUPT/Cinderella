@@ -3,11 +3,14 @@
 from __future__ import unicode_literals
 from common import get_regs, get_compile_regs
 import re
-import os
+import os,cPickle,pickle,jieba
 
 REGS = get_compile_regs(get_regs('equity'))
 DICT_PATH = './dict/'
-
+# 股权标签
+equityTag = re.compile(u"(\d+)[%％]+")
+DYN_DICT = cPickle.load(open('%smoney_dynamic_dict_CHI' % DICT_PATH))
+KNN = pickle.load(open('equity_knn.model','rb'))
 
 def _get_module_path(path):
     real_path = os.path.join(os.getcwd(), os.path.dirname(__file__), path)
@@ -25,39 +28,54 @@ def get_equity(document, mode=2):
 
 def equity_1(document):
     '''
-    抽取股权占比
+    利用KNN抽取股权占比
     :param document: chunk 包含 sentence,words,labels
-    :return: 字典 {"status":1,"equity":[10%]} 或者 {"status":0,"equity":[20%]} => 1 表示 关键字抽取,0 表示 全文抽取
+    :return: 字典 {"status":1,"equity":10%} 或者 {"status":0,"equity":20%}
+            定位 百分比 的句子,取"百分比"左右的window大小的句段,转化为特征向量
+            利用knn识别是否为股权而非其他等(如利润等)
+            否则 返回None
     '''
-    global REGS
-    equity = []
-    # 股权标签
-    equityTag = re.compile(u"(\d+)[%％]+")
+    global equityTag,DYN_DICT,KNN
+
     # 移动窗口
-    window = 3
+    window = 5
     for sentence in document.sentences:
-        # 优先定位 百分比的位置
-        hasEquity = re.search(equityTag, sentence.raw)
+        # 只处理带百分比的句子
+        hasEquity = re.findall(equityTag, sentence.raw)
         if hasEquity:
-            # 匹配的起点和终点
-            start, end = hasEquity.span()
-            if 9 < int(hasEquity.group(1)) < 40:
+            # 匹配的终点
+            equity_end = 0
+            for reg_equity in hasEquity:
+                #非常态值,则跳过
+                if not is_legal(reg_equity):
+                    continue
+                new_sentence = sentence.raw[equity_end:]
+                equity_start,equity_end = re.search(re.compile(reg_equity),new_sentence).span()
+                #边界检测
+                window_start = equity_start - window if equity_start > window else 0
+                window_end = equity_end + window if equity_end < len(new_sentence) - window else len(new_sentence)
+                #转化为向量
+                sentence_in_window = new_sentence[window_start : equity_start] + new_sentence[equity_end : window_end]
+                vec = sentence2vec(sentence_in_window,DYN_DICT)
+                is_equity = KNN.predict([vec])
+                if is_equity:
+                    return {"status": 1, "equity": reg_equity}
 
-                if start < window:
-                    start = window
-                if end > len(sentence.raw) - window:
-                    end = len(sentence.raw) - window
-                # 按优先级 检测 窗口词是否包含股权关键词
-                for reg in REGS:
-                    if re.search(reg, sentence.raw[start - window: end + window]):
-                        return {"status": 1, "equity": hasEquity.group()}
+    return None
 
-                # 如果检测不到关键词
-                equity.append(hasEquity.group())
-
-    return {"status": 0, "equity": equity}
-
-
+def is_legal(equity):
+    '''
+    认为出让股份在[3,40]之间
+    :param equity:
+    :return:
+    '''
+    try:
+        if int(equity) > 3 and int(equity) <= 40:
+            return True
+        else:
+            return False
+    except:
+        return False
 def equity_2(document, baseLine=0.0):
     '''
     抽取股权比
@@ -186,3 +204,33 @@ def load_stopwords(path):
             word = line.strip().decode('utf-8')
             stopwords.add(word)
     return stopwords
+def sentence2vec(sentence, dynamic_dicts):
+    """ 使用动态词典将句子转换成特征向量
+
+    每个类别分别生成4个特征:
+        - average: 平均强度
+        - top_1: 类别强度最高
+        - top_2: 类别强度前2之和
+        - top_4: 类别强度前4之和
+    """
+    global STOPWORDS
+    if not isinstance(sentence,list):
+        sentence = removeStopWords(jieba.cut(sentence))
+
+    vec = []
+    weights = [dynamic_dicts.get(word, 0.1) for word in sentence]
+    if not weights:
+        return [0]*4
+
+    weights = sorted(weights, reverse=True)
+
+    # average
+    vec.append(sum(weights) / weights)
+    # top_1
+    vec.append(weights[0])
+    # top_2
+    vec.append(sum(weights[:2]))
+    # top_4
+    vec.append(sum(weights[:4]))
+
+    return vec
