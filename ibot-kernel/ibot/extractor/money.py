@@ -47,7 +47,6 @@ def money_1(document):
     '''
     global STOPWORDS,DYN_DICT,REGS,KNN
 
-    money = []
     # 金额标签
     money_reg = ['万','w','W','亿','百万','美元','美金','元','RMB']
     moneyTag = ('|').join(['\d?\.?\d+%s'%x for x in money_reg])
@@ -64,7 +63,7 @@ def money_1(document):
                 money_start, money_end = re.search(re.compile(money),new_sentence).span()
                 #边界判断
                 window_start = money_start - window if money_start > window else 0
-                window_end = money_end + window if money_end < len(sentence.raw) - window else len(sentence.raw)
+                window_end = money_end + window if money_end < len(new_sentence) - window else len(new_sentence)
                 #取出窗口内词,转换向量
                 sentence_in_window = new_sentence[window_start : money_start] + new_sentence[money_end : window_end]
                 vec = sentence2vec(sentence_in_window,DYN_DICT)
@@ -73,7 +72,7 @@ def money_1(document):
                 if is_money:
                     return {"status": 1, "money": money}
 
-    return {"status": 0.5, "money": money}
+    return None
 
 
 def money_2(document, baseLine=0.0):
