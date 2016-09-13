@@ -8,6 +8,8 @@ from sklearn.externals import joblib
 
 REGS = get_compile_regs(get_regs('money'))
 DICT_PATH = './dict/'
+money_reg = ['万','w','W','亿','百万','美元','美金','元','RMB']
+moneyTag = ('|').join(['\d?\.?\d+%s'%x for x in money_reg])
 
 def load_stopwords(path):
     '''
@@ -34,7 +36,7 @@ def _get_module_path(path):
 
 def get_money(document, mode=2):
     if int(mode) == 1:
-        return money_2(document, 2.5)
+        return money_1(document)
     if int(mode) == 2:
         return money_2(document)
 
@@ -43,13 +45,12 @@ def money_1(document):
     '''
     借助knn分类器定位抽取
     :param document:
-    :return:
+    :return:[(100万,0.95),(200万,0.05)]
     '''
     global STOPWORDS,DYN_DICT,REGS,KNN
-
+    result = []
     # 金额标签
-    money_reg = ['万','w','W','亿','百万','美元','美金','元','RMB']
-    moneyTag = ('|').join(['\d?\.?\d+%s'%x for x in money_reg])
+    global moneyTag
     # 移动窗口
     window = 5
     for sentence in document.sentences:
@@ -69,13 +70,14 @@ def money_1(document):
                 vec = sentence2vec(sentence_in_window,DYN_DICT)
                 #判断是否为融资额
                 is_money = KNN.predict(vec)
-                if is_money:
-                    return {"status": 1, "money": money}
+                weight = 0.95 if is_money else 0.05
 
-    return None
+                result.append((money,weight))
+
+    return result
 
 
-def money_2(document, baseLine=0.0):
+def money_2(document, baseLine=2.5):
     '''
     抽取融资额
     :param document:
@@ -84,10 +86,11 @@ def money_2(document, baseLine=0.0):
     bagofWords = load_bagWords('money')
     windowWord = cutWindowWord(document)
 
-    reg = re.compile(u'(\d+\.?\d*)[万亿美金]+')
+    global moneyTag
+
     result = []
     for words in windowWord:
-        regCont = re.search(reg, ''.join(words))
+        regCont = re.search(moneyTag, ''.join(words))
         if not regCont:
             continue
         tagCont = regCont.group()
